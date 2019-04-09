@@ -1,0 +1,13 @@
+*
+!*/
+
+!.gitignore
+!docker-compose.yml
+
+!nginx/Dockerfile
+!nginx/server.conf
+
+!server/Dockerfile
+!server/server.go
+
+!client/tcx/src/*

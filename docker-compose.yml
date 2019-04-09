@@ -1,0 +1,15 @@
+version: '3'
+services:
+  nginx:
+    build: ./nginx
+    ports:
+      - '8080:80'
+    volumes:
+      - ./client/tcx/dist:/var/www/html
+      - ./nginx/server.conf:/etc/nginx/nginx.conf
+  server:
+    build: ./server
+    ports:
+      - '8888:8888'
+    volumes:
+      - ./server:/app
