@@ -11,3 +11,6 @@
 !server/server.go
 
 !client/tcx/src/*
+!client/tcx/src/assets/*
+!client/tcx/src/components/*
+!client/tcx/src/views/*
