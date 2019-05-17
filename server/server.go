@@ -1,14 +1,13 @@
 package main
 
-import(
+import (
 	"database/sql"
 	"server/controller"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
-
 
 func main() {
 	router := gin.Default()
@@ -19,19 +18,22 @@ func main() {
 	config.AllowHeaders = []string{"*"}
 
 	//DB
-	db,err := sql.Open("mysql","root:root@([db]:3306)/TCX")
+	db, err := sql.Open("mysql", "root:root@([db]:3306)/TCX?parseTime=true")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
 
 	userctr := &controller.UserCtr{DB: db}
+	rirekictr := &controller.RirekiCtr{DB: db}
 
 	router.Use(cors.New(config))
 
 	//routing start
-	router.GET("/users",userctr.All)
-	router.POST("/users",userctr.Add)
+	router.GET("/users", userctr.All)
+	router.POST("/users", userctr.Add)
+
+	router.GET("/rireki/:joid", rirekictr.PersonalAll)
 
 	router.Run(":8888")
 }
