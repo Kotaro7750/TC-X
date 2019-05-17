@@ -23,7 +23,6 @@ import Button from '@/components/Button.vue';
   },
 })
 export default class Home extends Vue {
-  @Prop()
   msg!: string;
 
   async apiPublic(){

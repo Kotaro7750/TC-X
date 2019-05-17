@@ -1,20 +1,37 @@
 package main
 
-import "github.com/gin-gonic/gin"
-import "github.com/gin-contrib/cors"
+import(
+	"database/sql"
+	"server/controller"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
+	_ "github.com/go-sql-driver/mysql"
+)
+
 
 func main() {
 	router := gin.Default()
 
+	//CORS
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:8080"}
-	config.AllowHeaders = []string{"Origin"}
+	config.AllowHeaders = []string{"*"}
+
+	//DB
+	db,err := sql.Open("mysql","root:root@([db]:3306)/TCX")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	userctr := &controller.UserCtr{DB: db}
 
 	router.Use(cors.New(config))
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "bang",
-		})
-	})
+
+	//routing start
+	router.GET("/users",userctr.All)
+	router.POST("/users",userctr.Add)
+
 	router.Run(":8888")
 }

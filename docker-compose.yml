@@ -8,8 +8,20 @@ services:
       - ./client/tcx/dist:/var/www/html
       - ./nginx/server.conf:/etc/nginx/nginx.conf
   server:
+    depends_on: 
+      - db
     build: ./server
     ports:
       - '8888:8888'
     volumes:
       - ./server:/app
+
+  db:
+    build:  ./db
+    ports: 
+      - '3306:3306'
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_DATABASE: TCX

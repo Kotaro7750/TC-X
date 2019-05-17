@@ -8,7 +8,9 @@
 !nginx/server.conf
 
 !server/Dockerfile
-!server/server.go
+!server/*.go
+!server/controller/
+!server/model/
 
 !client/tcx/src/*
 !client/tcx/src/assets/*
