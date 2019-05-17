@@ -3,6 +3,7 @@ package controller
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	//"time"
@@ -135,6 +136,76 @@ func (r *RirekiCtr) RirekiDelete(c *gin.Context)  {
 	if err != nil {
 		resp := err.Error()
 		c.JSON(http.StatusInternalServerError, gin.H{"error":resp,})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"error":  nil,
+	})
+	return
+}
+
+//RirekiUpdate is a function to update rireki date
+func (r *RirekiCtr) RirekiUpdate(c *gin.Context)  {
+	month, err := strconv.Atoi(c.Param("month"))
+
+	if err != nil {
+		fmt.Print(err)
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	joid, err := strconv.Atoi(c.Param("joid"))
+
+	if err != nil {
+		fmt.Print(err)
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	id, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		fmt.Print(err)
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	var rireki model.Rireki
+
+	if err := c.ShouldBindJSON(&rireki); err != nil {
+		fmt.Print(err)
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	//contradictedList,err := model.IsContradicted(r.DB,rireki,month);
+
+	//if len(contradictedList) != 2 || contradictedList[0].ID != id {
+	//	fmt.Print(err)
+	//	resp := errors.New(err.Error())
+	//	c.JSON(http.StatusInternalServerError, resp)
+	//	return
+	//}
+
+	if  err != nil {
+		fmt.Print(err)
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+
+	err = model.RirekiUpdate(r.DB,month,joid,id,rireki)
+
+	if err != nil {
+		fmt.Print(err)
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
 		return
 	}
 

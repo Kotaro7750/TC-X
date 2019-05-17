@@ -36,6 +36,7 @@ func main() {
 	router.GET("/rireki/:month/:joid", rirekictr.PersonalAll)
 	router.POST("/rireki/:month", rirekictr.RirekiAdd)
 	router.DELETE("/rireki/:month/:joid/:id", rirekictr.RirekiDelete)
+	router.PATCH("/rireki/:month/:joid/:id", rirekictr.RirekiUpdate)
 
 	router.Run(":8888")
 }

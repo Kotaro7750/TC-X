@@ -100,7 +100,6 @@ func RirekiDelete(db *sql.DB,month int,joid int,id int) error {
 	res,err := db.Exec(fmt.Sprintf("DELETE FROM `%s` WHERE (id = '%d' AND joid = '%d')",tableName,id,joid))
 
 	if err != nil {
-		fmt.Print(err)
 		return err
 	}
 
@@ -108,4 +107,22 @@ func RirekiDelete(db *sql.DB,month int,joid int,id int) error {
 		return errors.New("no rows affected")
 	}
 	return nil	
+}
+
+//RirekiUpdate is a function to update rireki
+func RirekiUpdate(db *sql.DB,month int,joid int,id int,rireki Rireki) error {
+	tableName := strconv.Itoa(month) + "_rireki"
+
+	formatedStartTime := rireki.StartTime.Format("2006-01-02 15:04:05")
+	formatedEndTime := rireki.EndTime.Format("2006-01-02 15:04:05")
+
+	_,err := db.Exec(fmt.Sprintf("UPDATE `%s` SET joid=%d,syubetsu=%d,about='%s',start_time=cast('%s' as DATETIME),end_time=cast('%s' as DATETIME) WHERE joid = '%d' AND id = '%d'",tableName,rireki.Joid,rireki.Syubetsu,rireki.About,formatedStartTime,formatedEndTime,joid,id))
+
+
+	if  err !=nil {
+		fmt.Print(err)
+		return err
+	}
+
+	return nil
 }
