@@ -34,6 +34,7 @@ func main() {
 	router.POST("/users", userctr.Add)
 
 	router.GET("/rireki/:joid", rirekictr.PersonalAll)
+	router.POST("/rireki", rirekictr.RirekiAdd)
 
 	router.Run(":8888")
 }

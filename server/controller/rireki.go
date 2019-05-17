@@ -3,8 +3,10 @@ package controller
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
+	//"time"
 
 	"server/model"
 
@@ -34,6 +36,34 @@ func (r *RirekiCtr) PersonalAll(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"result": rirekiList,
+		"error":  nil,
+	})
+	return
+}
+
+//RirekiAdd is a function to add rireki of month
+func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
+	var rireki model.Rireki
+
+	if err := c.ShouldBindJSON(&rireki); err != nil {
+		fmt.Print(err)
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	month := int(rireki.StartTime.Month())
+
+	addedRireki, err := model.RirekiAdd(r.DB, rireki, month)
+
+	if err != nil {
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"result": addedRireki,
 		"error":  nil,
 	})
 	return
