@@ -25,3 +25,4 @@ services:
       MYSQL_USER: test
       MYSQL_PASSWORD: test
       MYSQL_DATABASE: TCX
+      TZ: "Asia/Tokyo"

@@ -7,10 +7,12 @@
 !nginx/Dockerfile
 !nginx/server.conf
 
+!db/*
+
 !server/Dockerfile
-!server/*.go
-!server/controller/
-!server/model/
+!server/*
+!server/controller/*
+!server/model/*
 
 !client/tcx/src/*
 !client/tcx/src/assets/*
