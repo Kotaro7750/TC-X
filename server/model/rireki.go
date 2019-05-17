@@ -60,3 +60,33 @@ func RirekiAdd(db *sql.DB,rireki Rireki,month int)(*Rireki,error)  {
 
 	return &rireki, nil
 }
+
+//IsContradicted is a function to decide if given rireki's is contradicted
+func IsContradicted(db *sql.DB,rireki Rireki,month int) ([]*Rireki,error) {
+	tableName := strconv.Itoa(month) + "_rireki"
+
+	formatedStartTime := rireki.StartTime.Format("2006-01-02 15:04:05")
+	formatedEndTime := rireki.EndTime.Format("2006-01-02 15:04:05")
+
+	rows,err := db.Query(fmt.Sprintf("SELECT joid,syubetsu,about,start_time,end_time FROM `%s` WHERE (joid = '%d') AND ((`start_time` BETWEEN cast('%s' as DATETIME) AND cast('%s' as DATETIME)) OR (`end_time` BETWEEN cast('%s' as DATETIME) AND cast('%s' as DATETIME)))",tableName,rireki.Joid,formatedStartTime,formatedEndTime,formatedStartTime,formatedEndTime))
+	if err !=nil {
+		fmt.Print(err)
+		return nil,err
+	}
+
+	var contradictedList []*Rireki
+
+	for rows.Next(){
+		var contradictedRireki Rireki
+		if err := rows.Scan(&contradictedRireki.Joid, &contradictedRireki.Syubetsu, &contradictedRireki.About, &contradictedRireki.StartTime, &contradictedRireki.EndTime); err != nil {
+			return nil,err
+		}
+		contradictedList = append(contradictedList, &contradictedRireki)
+	}
+
+	if len(contradictedList) !=0 {
+		return contradictedList,nil
+	}
+
+	return nil,nil
+}

@@ -54,6 +54,19 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 
 	month := int(rireki.StartTime.Month())
 
+	contradictedList,err := model.IsContradicted(r.DB,rireki,month);
+
+	if  err != nil {
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	if len(contradictedList) != 0 {
+		c.JSON(http.StatusBadRequest, contradictedList)
+		return
+	}
+
 	addedRireki, err := model.RirekiAdd(r.DB, rireki, month)
 
 	if err != nil {
