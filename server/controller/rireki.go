@@ -183,14 +183,21 @@ func (r *RirekiCtr) RirekiUpdate(c *gin.Context)  {
 		return
 	}
 
-	//contradictedList,err := model.IsContradicted(r.DB,rireki,month);
+	contradictedList,err := model.IsContradicted(r.DB,rireki,month);
 
-	//if len(contradictedList) != 2 || contradictedList[0].ID != id {
-	//	fmt.Print(err)
-	//	resp := errors.New(err.Error())
-	//	c.JSON(http.StatusInternalServerError, resp)
-	//	return
-	//}
+	if err !=nil {
+		fmt.Print(err)
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	if len(contradictedList) != 0  {
+		if len(contradictedList) >= 2 || contradictedList[0].ID != id {
+			c.JSON(http.StatusBadRequest, contradictedList)
+			return
+		}
+	}
 
 	if  err != nil {
 		fmt.Print(err)
