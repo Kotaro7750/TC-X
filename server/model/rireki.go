@@ -2,6 +2,7 @@ package model
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -9,6 +10,7 @@ import (
 
 //Rireki is a structure of each rireki
 type Rireki struct {
+	ID int
 	Joid      int
 	Syubetsu  int `json:"syubetsu" binding:"required"`
 	About     string `json:"about" binding:"required"`
@@ -21,7 +23,7 @@ type Rireki struct {
 func PersonalRirekiAll(db *sql.DB, joid int, month int) ([]*Rireki, error) {
 	tableName := strconv.Itoa(month) + "_rireki"
 
-	rows, err := db.Query(fmt.Sprintf("SELECT joid,syubetsu,about,start_time,end_time FROM %s WHERE joid=%d", tableName, joid))
+	rows, err := db.Query(fmt.Sprintf("SELECT id,joid,syubetsu,about,start_time,end_time FROM %s WHERE joid=%d", tableName, joid))
 
 	if err != nil {
 		return nil, err
@@ -31,7 +33,7 @@ func PersonalRirekiAll(db *sql.DB, joid int, month int) ([]*Rireki, error) {
 
 	for rows.Next() {
 		var rireki Rireki
-		if err := rows.Scan(&rireki.Joid, &rireki.Syubetsu, &rireki.About, &rireki.StartTime, &rireki.EndTime); err != nil {
+		if err := rows.Scan(&rireki.ID,&rireki.Joid, &rireki.Syubetsu, &rireki.About, &rireki.StartTime, &rireki.EndTime); err != nil {
 			return nil, err
 		}
 		rirekiList = append(rirekiList, &rireki)
@@ -68,7 +70,7 @@ func IsContradicted(db *sql.DB,rireki Rireki,month int) ([]*Rireki,error) {
 	formatedStartTime := rireki.StartTime.Format("2006-01-02 15:04:05")
 	formatedEndTime := rireki.EndTime.Format("2006-01-02 15:04:05")
 
-	rows,err := db.Query(fmt.Sprintf("SELECT joid,syubetsu,about,start_time,end_time FROM `%s` WHERE (joid = '%d') AND ((`start_time` BETWEEN cast('%s' as DATETIME) AND cast('%s' as DATETIME)) OR (`end_time` BETWEEN cast('%s' as DATETIME) AND cast('%s' as DATETIME)))",tableName,rireki.Joid,formatedStartTime,formatedEndTime,formatedStartTime,formatedEndTime))
+	rows,err := db.Query(fmt.Sprintf("SELECT id,joid,syubetsu,about,start_time,end_time FROM `%s` WHERE (joid = '%d') AND ((`start_time` BETWEEN cast('%s' as DATETIME) AND cast('%s' as DATETIME)) OR (`end_time` BETWEEN cast('%s' as DATETIME) AND cast('%s' as DATETIME)))",tableName,rireki.Joid,formatedStartTime,formatedEndTime,formatedStartTime,formatedEndTime))
 	if err !=nil {
 		fmt.Print(err)
 		return nil,err
@@ -78,7 +80,7 @@ func IsContradicted(db *sql.DB,rireki Rireki,month int) ([]*Rireki,error) {
 
 	for rows.Next(){
 		var contradictedRireki Rireki
-		if err := rows.Scan(&contradictedRireki.Joid, &contradictedRireki.Syubetsu, &contradictedRireki.About, &contradictedRireki.StartTime, &contradictedRireki.EndTime); err != nil {
+		if err := rows.Scan(&contradictedRireki.ID,&contradictedRireki.Joid, &contradictedRireki.Syubetsu, &contradictedRireki.About, &contradictedRireki.StartTime, &contradictedRireki.EndTime); err != nil {
 			return nil,err
 		}
 		contradictedList = append(contradictedList, &contradictedRireki)
@@ -89,4 +91,21 @@ func IsContradicted(db *sql.DB,rireki Rireki,month int) ([]*Rireki,error) {
 	}
 
 	return nil,nil
+}
+
+//RirekiDelete is a function to delete rireki
+func RirekiDelete(db *sql.DB,month int,joid int,id int) error {
+	tableName := strconv.Itoa(month) + "_rireki"
+
+	res,err := db.Exec(fmt.Sprintf("DELETE FROM `%s` WHERE (id = '%d' AND joid = '%d')",tableName,id,joid))
+
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
+
+	if affectedRow,_ := res.RowsAffected(); affectedRow == 0{
+		return errors.New("no rows affected")
+	}
+	return nil	
 }

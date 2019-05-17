@@ -3,7 +3,6 @@ package controller
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	//"time"
@@ -21,7 +20,20 @@ type RirekiCtr struct {
 //PersonalAll is a function to list up all indivisual rireki of month
 func (r *RirekiCtr) PersonalAll(c *gin.Context) {
 	joid, err := strconv.Atoi(c.Param("joid"))
-	rirekiList, err := model.PersonalRirekiAll(r.DB, joid, 5)
+	if err != nil {
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	month, err := strconv.Atoi(c.Param("month"))
+	if err != nil {
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	rirekiList, err := model.PersonalRirekiAll(r.DB, joid, month)
 
 	if err != nil {
 		resp := errors.New(err.Error())
@@ -43,16 +55,26 @@ func (r *RirekiCtr) PersonalAll(c *gin.Context) {
 
 //RirekiAdd is a function to add rireki of month
 func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
-	var rireki model.Rireki
-
-	if err := c.ShouldBindJSON(&rireki); err != nil {
-		fmt.Print(err)
+	month, err := strconv.Atoi(c.Param("month"))
+	if  err != nil {
 		resp := errors.New(err.Error())
 		c.JSON(http.StatusInternalServerError, resp)
 		return
 	}
 
-	month := int(rireki.StartTime.Month())
+	var rireki model.Rireki
+
+	if err := c.ShouldBindJSON(&rireki); err != nil {
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	if month != int(rireki.StartTime.Month()) {
+		resp := errors.New("month")
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
 
 	contradictedList,err := model.IsContradicted(r.DB,rireki,month);
 
@@ -77,6 +99,46 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"result": addedRireki,
+		"error":  nil,
+	})
+	return
+}
+
+//RirekiDelete is a function to delete rireki with joid and id
+func (r *RirekiCtr) RirekiDelete(c *gin.Context)  {
+	month, err := strconv.Atoi(c.Param("month"))
+
+	if err != nil {
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	joid, err := strconv.Atoi(c.Param("joid"))
+
+	if err != nil {
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	id, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		resp := errors.New(err.Error())
+		c.JSON(http.StatusInternalServerError, resp)
+		return
+	}
+
+	err = model.RirekiDelete(r.DB,month,joid,id)
+
+	if err != nil {
+		resp := err.Error()
+		c.JSON(http.StatusInternalServerError, gin.H{"error":resp,})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
 		"error":  nil,
 	})
 	return

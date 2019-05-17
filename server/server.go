@@ -33,8 +33,9 @@ func main() {
 	router.GET("/users", userctr.All)
 	router.POST("/users", userctr.Add)
 
-	router.GET("/rireki/:joid", rirekictr.PersonalAll)
-	router.POST("/rireki", rirekictr.RirekiAdd)
+	router.GET("/rireki/:month/:joid", rirekictr.PersonalAll)
+	router.POST("/rireki/:month", rirekictr.RirekiAdd)
+	router.DELETE("/rireki/:month/:joid/:id", rirekictr.RirekiDelete)
 
 	router.Run(":8888")
 }
