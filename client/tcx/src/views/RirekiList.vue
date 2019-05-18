@@ -30,7 +30,6 @@ export default class RirekiList extends Vue{
         endTime:string,
     }[] = [];
 
-
     created () {
         this.fetchRireki();
     }
