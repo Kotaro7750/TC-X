@@ -14,7 +14,13 @@
 !server/controller/*
 !server/model/*
 
+!client/tcx/*
 !client/tcx/src/*
 !client/tcx/src/assets/*
 !client/tcx/src/components/*
 !client/tcx/src/views/*
+
+!client/tcx/dist/*
+!client/tcx/dist/css/*
+!client/tcx/dist/img/*
+!client/tcx/dist/js/*
