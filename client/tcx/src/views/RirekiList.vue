@@ -6,8 +6,7 @@
             {{ rireki.id }}
             {{ rireki.syubetsu }}
             {{ rireki.about }}
-            {{ rireki.startTime }}
-            {{ rireki.endTime }}
+            {{ rireki.startTime |Time}}〜{{ rireki.endTime |Time}}
         </li>
     </ul>
     <button @click="fetchRireki">click</button>
@@ -18,6 +17,18 @@
 import {Component, Vue} from "vue-property-decorator";
 
 @Component({
+    filters: {
+        //filter of DB-formatted time to User-like time  
+        Time:function (DBTime:string) {
+            let year: string = DBTime.split('-')[0];
+            let month:string = DBTime.split('-')[1];
+            let day:string = DBTime.split('-')[2].split('T')[0];
+            let hour:string = DBTime.split('-')[2].split('T')[1].split(':')[0];
+            let minute:string = DBTime.split('-')[2].split('T')[1].split(':')[1];
+
+            return year + "年" + month + "月" + day + "日 " + hour + ":" + minute;
+        }
+    }
 })
 
 export default class RirekiList extends Vue{
