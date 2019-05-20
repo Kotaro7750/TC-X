@@ -1,6 +1,9 @@
 <template>
   <div class="rirekiadd">
     <h2>履歴追加</h2>
+
+    <h3 v-show="isInputTimeStrange">入力した時間を確認してください。このままだと終了時刻は翌日の時刻となります。</h3>
+
     <ul v-show="!isInputCorrect">
       <li v-for="errMsg in errMsgs" v-bind:key="errMsg">{{errMsg}}</li>
     </ul>
@@ -9,8 +12,7 @@
     <input type="text" v-model="rireki.about">
     <input type="time" v-model="rireki.startTime">
     <input type="time" v-model="rireki.endTime">
-    {{rireki}}
-    <button @click="log">送信</button>
+    <button @click="addRireki" v-show="isInputCorrect">送信</button>
   </div>
 </template>
 
@@ -35,7 +37,7 @@ export default class RirekiAdd extends Vue{
         endTime:""
     };
 
-    errMsgs: string[] = []
+    errMsgs: string[] = [];
 
     addRireki():void{
       var url = "http://localhost:8888/rireki/" + "5";
@@ -60,10 +62,8 @@ export default class RirekiAdd extends Vue{
         this.errMsgs.push("業務内容を入力してください。");
       }
 
-      if (this.rireki.startTime.match("/^23:56$/") == null) {
+      if (this.rireki.startTime.match(/([0-1][0-9]|2[0-3]):[0-5][0-9]/) == null || this.rireki.endTime.match(/([0-1][0-9]|2[0-3]):[0-5][0-9]/) == null) {
         this.errMsgs.push("時刻は00:00〜23:59までの範囲で入力してください");
-        console.log(this.rireki.startTime.match("/^23\:56$/"));
-        console.log(typeof this.rireki.startTime);
       }
 
       if (this.errMsgs.length != 0) {
@@ -71,6 +71,16 @@ export default class RirekiAdd extends Vue{
       }else{
         return true;
       }
+    }
+
+    //validate if input time is strange 
+    get isInputTimeStrange():boolean{
+      let startTimeNum :number = Number(this.rireki.startTime.split(':')[0])*100 +Number(this.rireki.startTime.split(':')[1]); 
+      let endTimeNum :number = Number(this.rireki.endTime.split(':')[0])*100 +Number(this.rireki.endTime.split(':')[1]); 
+      if (endTimeNum <= startTimeNum) {
+        return true;
+      }
+      return false;
     }
 
     log():void{
