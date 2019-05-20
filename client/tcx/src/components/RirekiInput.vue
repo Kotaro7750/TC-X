@@ -67,8 +67,8 @@ export default class RirekiInput extends Vue{
         joid:this.rireki.joid,
         syubetsu:this.rireki.syubetsu,
         about:this.rireki.about,
-        startTime:start.format('YYYY-MM-DDTHH:mm:ssZ'),
-        endTime:end.format('YYYY-MM-DDTHH:mm:ssZ'),
+        startTime:start.format("YYYY-MM-DDTHH:mm:ssZ"),
+        endTime:end.format("YYYY-MM-DDTHH:mm:ssZ"),
       }
         console.log(formattedrireki);
         return formattedrireki;

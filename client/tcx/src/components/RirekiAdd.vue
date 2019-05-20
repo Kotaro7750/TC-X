@@ -1,7 +1,7 @@
 <template>
   <div class="rirekiadd">
     <h2>履歴追加</h2>
-    <RirekiInput @on-submit="log" v-bind:year="year" v-bind:month="month" />
+    <RirekiInput @on-submit="onSubmit" v-bind:year="year" v-bind:month="month" />
   </div>
 </template>
 
@@ -24,28 +24,15 @@ export default class RirekiAdd extends Vue{
       joid:number,
       syubetsu:number,
       about:string,
-      startDay:number,
       startTime:string,
-      endDay:number,
       endTime:string,
     } = {
       joid:63,
       syubetsu:3,
       about:"",
-      startDay:moment().date(),
-      startTime:moment().format('hh:mm'),
-      endDay:moment().date(),
-      endTime:moment().format('hh:mm')
+      startTime:moment().format('YYYY-MM-DDTHH:mm:ssZ'),
+      endTime:moment().format('YYYY-MM-DDTHH:mm:ssZ'),
     };
-
-    //hh:mm => yy-mm-ddThh:mm:ssZ
-    get formatRireki(){
-      let rireki = this.rireki;
-
-      rireki.startTime = this.year + "-" + this.month + "-" + rireki.startDay + "T" + rireki.startTime.split(':')[0] + ":" + rireki.startTime.split(':')[1]; 
-      rireki.endTime = this.year + "-" + this.month + "-" + rireki.startDay + "T" + rireki.endTime.split(':')[0] + ":" + rireki.endTime.split(':')[1]; 
-      return rireki;
-    }
 
     addRireki():void{
       var url = "http://localhost:8888/rireki/" + "5";
@@ -59,9 +46,9 @@ export default class RirekiAdd extends Vue{
       })
     }
 
-    log(rireki:{day:number,joid:number,syubetsu:number,about:string,startDay:number,startTime:string,endDay:number,endTime:string}):void{
+    onSubmit(rireki:{joid:number,syubetsu:number,about:string,startTime:string,endTime:string}):void{
       this.rireki = rireki;
-      console.log(this.rireki);
+      this.addRireki();
     }
 }
 </script>
