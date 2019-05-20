@@ -3,8 +3,7 @@
     <Logo/>
     <HelloWorld msg="TC-X will change your life"/>
     <h2>{{ msg }}</h2>
-    <router-link to="/rireki/add">Add Rireki</router-link>
-    <router-link to="/rireki/list">List Rireki</router-link>
+    <router-link to="/rireki">Rireki</router-link>
   </div>
 </template>
 

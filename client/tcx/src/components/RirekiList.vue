@@ -57,7 +57,6 @@ export default class RirekiList extends Vue{
 
     loadJSONToRirekiList(json :any):void{
         this.rirekiList = json.result;
-        console.log(this.rirekiList.length);
     }
 
 }

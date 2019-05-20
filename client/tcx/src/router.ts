@@ -5,8 +5,7 @@ import Home from './views/Home.vue';
 import Signup from './views/Signup.vue';
 import Signin from './views/Signin.vue';
 
-import RirekiAdd from './views/RirekiAdd.vue';
-import RirekiList from './views/RirekiList.vue';
+import Rireki from './views/Rireki.vue';
 
 Vue.use(Router);
 
@@ -38,14 +37,9 @@ export default new Router({
       component: Signin,
     },
     {
-      path: '/rireki/add',
-      name: 'RirekiAdd',
-      component: RirekiAdd,
-    },
-    {
-      path: '/rireki/list',
-      name: 'RirekiList',
-      component: RirekiList,
+      path: '/rireki',
+      name: 'Rireki',
+      component: Rireki,
     },
   ],
 });
