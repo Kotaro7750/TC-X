@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator";
+import {Component, Vue,Prop,Watch} from "vue-property-decorator";
 
 @Component({
     filters: {
@@ -32,6 +32,9 @@ import {Component, Vue} from "vue-property-decorator";
 })
 
 export default class RirekiList extends Vue{
+    @Prop(Number) month!:number;
+    @Prop(Number) year!:number;
+
     rirekiList: {
         id: number,
         joid:number,
@@ -41,12 +44,17 @@ export default class RirekiList extends Vue{
         endTime:string,
     }[] = [];
 
+    @Watch('month') onMonthChanged(){
+        this.fetchRireki();
+    }
+
     created () {
         this.fetchRireki();
     }
 
     fetchRireki():void{
-        fetch("http://localhost:8888/rireki/5/63",{
+        let url = "http://localhost:8888/rireki/" + String(this.month) + "/63";
+        fetch(url,{
             method: 'GET'
         }).then(response => {
             return response.json();

@@ -9,7 +9,7 @@
     </select>
 
     <RirekiAdd v-bind:year="selectedYear" v-bind:month="selectedMonth"/>
-    <RirekiList />
+    <RirekiList v-bind:year="selectedYear" v-bind:month="selectedMonth" />
   </div>
 </template>
 

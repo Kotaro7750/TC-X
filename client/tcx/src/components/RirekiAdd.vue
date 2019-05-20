@@ -35,7 +35,7 @@ export default class RirekiAdd extends Vue{
     };
 
     addRireki():void{
-      var url = "http://localhost:8888/rireki/" + "5";
+      var url = "http://localhost:8888/rireki/" + String(this.month);
       fetch(url,{
         method: 'POST',
         body: JSON.stringify(this.rireki)
