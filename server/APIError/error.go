@@ -2,15 +2,11 @@ package apierror
 
 //APIError is a structure of single error of api
 type APIError struct {
-	code     string
-	resource string
-	message  string
+	Code     string `json:"code"`
+	Resource string `json:"resource"`
+	Message  string `json:"message"`
 }
 
-//APIErrors is a structure of errors of api
-type APIErrors struct {
-	errors []APIError
-}
 
 //errorCode is a map of error code
 var errorCode = map[int]string{
@@ -22,7 +18,7 @@ var errorCode = map[int]string{
 	11: "FailedExecQuery", //query string is correct,but execing query failed in some reason
 }
 
-//MakeError is a function to make new APIError
-func MakeError(code int, resource string, message string) APIError {
-	return APIError{code: errorCode[code], resource: resource, message: message}
+//Error is a function to make new APIError
+func Error(code int, resource string, message string) APIError {
+	return APIError{Code: errorCode[code], Resource: resource, Message: message}
 }

@@ -2,12 +2,10 @@ package controller
 
 import (
 	"database/sql"
-	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
-	//"time"
 
+	"server/apierror"
 	"server/model"
 
 	"github.com/gin-gonic/gin"
@@ -22,28 +20,40 @@ type RirekiCtr struct {
 func (r *RirekiCtr) PersonalAll(c *gin.Context) {
 	joid, err := strconv.Atoi(c.Param("joid"))
 	if err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "PersonalAll", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	month, err := strconv.Atoi(c.Param("month"))
 	if err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "PersonalAll", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	rirekiList, err := model.PersonalRirekiAll(r.DB, joid, month)
 
 	if err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(11, "PersonalAll", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	if len(rirekiList) == 0 {
-		c.JSON(http.StatusOK, make([]int, 0))
+		c.JSON(http.StatusOK, gin.H{
+			"result":make([]int, 0),
+			"error":nil,
+		})
 		return
 	}
 
@@ -57,44 +67,63 @@ func (r *RirekiCtr) PersonalAll(c *gin.Context) {
 //RirekiAdd is a function to add rireki of month
 func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 	month, err := strconv.Atoi(c.Param("month"))
-	if  err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+	if err != nil {
+		error := apierror.Error(1, "RirekiAdd", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	var rireki model.Rireki
 
 	if err := c.ShouldBindJSON(&rireki); err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "RirekiAdd", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	if month != int(rireki.StartTime.Month()) {
-		resp := errors.New("month")
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "RirekiAdd", "URLParam :month not equal with JSONParam")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
-	contradictedList,err := model.IsContradicted(r.DB,rireki,month);
+	contradictedList, err := model.IsContradicted(r.DB, rireki, month)
 
-	if  err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+	if err != nil {
+		error := apierror.Error(11, "RirekiAdd", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	if len(contradictedList) != 0 {
-		c.JSON(http.StatusBadRequest, contradictedList)
+		error := apierror.Error(3, "RirekiAdd", "request is conflicted with database")
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": contradictedList,
+			"error":  error,
+		})
 		return
 	}
 
 	addedRireki, err := model.RirekiAdd(r.DB, rireki, month)
 
 	if err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(11, "RirekiAdd", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
@@ -106,118 +135,140 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 }
 
 //RirekiDelete is a function to delete rireki with joid and id
-func (r *RirekiCtr) RirekiDelete(c *gin.Context)  {
+func (r *RirekiCtr) RirekiDelete(c *gin.Context) {
 	month, err := strconv.Atoi(c.Param("month"))
 
 	if err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "RirekiDelete", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	joid, err := strconv.Atoi(c.Param("joid"))
 
 	if err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "RirekiDelete", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "RirekiDelete", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
-	err = model.RirekiDelete(r.DB,month,joid,id)
+	err = model.RirekiDelete(r.DB, month, joid, id)
 
 	if err != nil {
-		resp := err.Error()
-		c.JSON(http.StatusInternalServerError, gin.H{"error":resp,})
+		error := apierror.Error(11, "RirekiDelete", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"error":  nil,
+		"result":nil,
+		"error": nil,
 	})
 	return
 }
 
 //RirekiUpdate is a function to update rireki date
-func (r *RirekiCtr) RirekiUpdate(c *gin.Context)  {
+func (r *RirekiCtr) RirekiUpdate(c *gin.Context) {
 	month, err := strconv.Atoi(c.Param("month"))
 
 	if err != nil {
-		fmt.Print(err)
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "RirekiUpdate", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	joid, err := strconv.Atoi(c.Param("joid"))
 
 	if err != nil {
-		fmt.Print(err)
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "RirekiUpdate", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
-		fmt.Print(err)
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "RirekiUpdate", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	var rireki model.Rireki
 
 	if err := c.ShouldBindJSON(&rireki); err != nil {
-		fmt.Print(err)
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(1, "RirekiUpdate", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
-	contradictedList,err := model.IsContradicted(r.DB,rireki,month);
+	contradictedList, err := model.IsContradicted(r.DB, rireki, month)
 
-	if err !=nil {
-		fmt.Print(err)
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+	if err != nil {
+		error := apierror.Error(11, "RirekiUpdate", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
-	if len(contradictedList) != 0  {
+	if len(contradictedList) != 0 {
 		if len(contradictedList) >= 2 || contradictedList[0].ID != id {
-			c.JSON(http.StatusBadRequest, contradictedList)
+			error := apierror.Error(3, "RirekiUpdate", "request is conflicted with database")
+			c.JSON(http.StatusBadRequest, gin.H{
+				"result": contradictedList,
+				"error":  error,
+			})
 			return
 		}
 	}
 
-	if  err != nil {
-		fmt.Print(err)
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
-		return
-	}
-
-
-	err = model.RirekiUpdate(r.DB,month,joid,id,rireki)
+	err = model.RirekiUpdate(r.DB, month, joid, id, rireki)
 
 	if err != nil {
-		fmt.Print(err)
-		resp := errors.New(err.Error())
-		c.JSON(http.StatusInternalServerError, resp)
+		error := apierror.Error(11, "RirekiUpdate", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"result": nil,
+			"error":  error,
+		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"error":  nil,
+		"result":nil,
+		"error": nil,
 	})
 	return
 }
