@@ -13,6 +13,7 @@
 !server/*
 !server/controller/*
 !server/model/*
+!server/APIError/*
 
 !client/tcx/*
 !client/tcx/src/*
