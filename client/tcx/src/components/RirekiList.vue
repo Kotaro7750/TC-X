@@ -1,6 +1,7 @@
 <template>
   <div class="rirekilist">
     <h2>履歴リスト</h2>
+    <p class="fetchError" v-show="isError">{{ fetchError }}</p>
     <ul>
         <li v-for="rireki in rirekiList" v-bind:key="rireki.id">
             {{ rireki.id }}
@@ -44,21 +45,30 @@ export default class RirekiList extends Vue{
         endTime:string,
     }[] = [];
 
+    isError:boolean = false;
+    fetchError:{} = {};
+
     @Watch('month') onMonthChanged(){
         this.fetchRireki();
     }
 
     created () {
+        this.isError = false;
         this.fetchRireki();
     }
 
     fetchRireki():void{
+        this.isError = false;
         let url = "http://localhost:8888/rireki/" + String(this.month) + "/63";
         fetch(url,{
             method: 'GET'
         }).then(response => {
+            if (!response.ok) {
+                this.isError =true;
+            }
             return response.json();
         }).then(json =>{
+            this.fetchError = json.error;
             this.loadJSONToRirekiList(json);
         })
     }
@@ -69,3 +79,9 @@ export default class RirekiList extends Vue{
 
 }
 </script>
+
+<style scoped>
+.fetchError { 
+  padding:12px; font-weight:850; color:#262626; background:#FFEBE8; border:2px solid #990000; 
+  }
+</style>

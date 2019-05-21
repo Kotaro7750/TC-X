@@ -1,7 +1,8 @@
 <template>
   <div class="rirekiadd">
     <h2>履歴追加</h2>
-    <RirekiInput @on-submit="onSubmit" v-bind:year="year" v-bind:month="month" />
+    <p class="fetchError" v-show="isError">{{ fetchError }}</p>
+    <RirekiInput @on-submit="onSubmit" v-bind:year="year" v-bind:month="month" ref="input"/>
   </div>
 </template>
 
@@ -34,15 +35,24 @@ export default class RirekiAdd extends Vue{
       endTime:moment().format('YYYY-MM-DDTHH:mm:ssZ'),
     };
 
+    isError:boolean = false;
+    fetchError:{} = {};
+
     addRireki():void{
+      this.isError = false;
       var url = "http://localhost:8888/rireki/" + String(this.month);
       fetch(url,{
         method: 'POST',
         body: JSON.stringify(this.rireki)
       }).then(response => {
+        if (!response.ok) {
+          this.isError = true;
+        }else{
+          this.clearInput();
+        }
         return response.json();
       }).then(json => {
-        console.log(json);
+        this.fetchError = json.error;
       })
     }
 
@@ -50,5 +60,17 @@ export default class RirekiAdd extends Vue{
       this.rireki = rireki;
       this.addRireki();
     }
+
+    clearInput(){
+      let inputForm :any = this.$refs.input;
+      inputForm.clearInput();
+    }
 }
 </script>
+
+<style scoped>
+.fetchError { 
+  padding:12px; font-weight:850; color:#262626; background:#FFEBE8; border:2px solid #990000; 
+  }
+</style>
+

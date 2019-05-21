@@ -80,7 +80,7 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 	}
 
 	if len(contradictedList) != 0 {
-		apiresponse.APIResponse(c, http.StatusInternalServerError, contradictedList, 3, "RirekiAdd", "request is conflicted with database")
+		apiresponse.APIResponse(c, http.StatusBadRequest, contradictedList, 3, "RirekiAdd", "request is conflicted with database")
 		return
 	}
 

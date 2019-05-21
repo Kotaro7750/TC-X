@@ -17,8 +17,6 @@ import Logo from '@/components/Logo.vue';
 })
 
 export default class Signup extends Vue{
-  //this.joid とかってfetchすると400えらー
-  //joidが"　"joid"　ってなるのでだめ　数字にしないと
   joid!: Number;
   name!: string;
   alert: string = "";

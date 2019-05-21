@@ -114,6 +114,17 @@ export default class RirekiInput extends Vue{
       }
       return days;
     }
+
+    clearInput(){
+      this.rireki = {
+        joid:63,
+        syubetsu:3,
+        about:"",
+        startDay:moment().date(),
+        startTime:moment().format('hh:mm'),
+        endTime:moment().format('hh:mm')
+      };
+    }
 }
 </script>
 
