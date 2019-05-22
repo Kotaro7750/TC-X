@@ -36,6 +36,12 @@ func PersonalRirekiAll(db *sql.DB, joid int, month int) ([]*Rireki, error) {
 		if err := rows.Scan(&rireki.ID, &rireki.Joid, &rireki.Syubetsu, &rireki.About, &rireki.StartTime, &rireki.EndTime); err != nil {
 			return nil, err
 		}
+		loc, _ := time.LoadLocation("Asia/Tokyo")
+		startTime, _ := time.ParseInLocation(`2006-01-02T15:04:05`, rireki.StartTime.Format("2006-01-02T15:04:05"), loc)
+		endTime, _ := time.ParseInLocation(`2006-01-02T15:04:05`, rireki.EndTime.Format("2006-01-02T15:04:05"), loc)
+
+		rireki.StartTime = startTime
+		rireki.EndTime = endTime
 		rirekiList = append(rirekiList, &rireki)
 	}
 

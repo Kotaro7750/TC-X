@@ -7,6 +7,9 @@ services:
     volumes:
       - ./client/tcx/dist:/var/www/html
       - ./nginx/server.conf:/etc/nginx/nginx.conf
+    environment: 
+      TZ: "Asia/Tokyo"
+
   server:
     depends_on: 
       - db
@@ -15,6 +18,8 @@ services:
       - '8888:8888'
     volumes:
       - ./server:/app
+    environment: 
+      TZ: "Asia/Tokyo"
 
   db:
     build:  ./db

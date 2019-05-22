@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import {Component, Vue,Prop,Emit,Watch} from "vue-property-decorator";
-import moment from "moment"
+import moment from "moment-timezone"
 
 @Component({
 })
@@ -29,6 +29,14 @@ import moment from "moment"
 export default class RirekiInput extends Vue{
     @Prop(Number) month!:number;
     @Prop(Number) year!:number;
+    @Prop() initData!:{
+      joid:number,
+      syubetsu:number,
+      about:string,
+      startDay:number,
+      startTime:string,
+      endTime:string,
+    };
 
     @Watch('month') onMonthChanged(){
       this.days = this.dayOfMonth(this.month);
@@ -41,13 +49,22 @@ export default class RirekiInput extends Vue{
       startDay:number,
       startTime:string,
       endTime:string,
-    } = {
+    } = this.initData == null ? 
+    //when not initialized
+    {
       joid:63,
       syubetsu:3,
       about:"",
       startDay:moment().date(),
-      startTime:moment().format('hh:mm'),
-      endTime:moment().format('hh:mm')
+      startTime:moment().tz("Asia/Tokyo").format('HH:mm'),
+      endTime:moment().tz("Asia/Tokyo").format('HH:mm')
+    } :{
+      joid:this.initData.joid,
+      syubetsu:this.initData.syubetsu,
+      about:this.initData.about,
+      startDay:this.initData.startDay,
+      startTime:moment(this.initData.startTime).tz("Asia/Tokyo").format('HH:mm'),
+      endTime:moment(this.initData.endTime).tz("Asia/Tokyo").format('HH:mm')
     };
 
     days = this.dayOfMonth(this.month);
@@ -67,10 +84,9 @@ export default class RirekiInput extends Vue{
         joid:this.rireki.joid,
         syubetsu:this.rireki.syubetsu,
         about:this.rireki.about,
-        startTime:start.format("YYYY-MM-DDTHH:mm:ssZ"),
-        endTime:end.format("YYYY-MM-DDTHH:mm:ssZ"),
+        startTime:start.format("YYYY-MM-DDTHH:mm:ss+09:00"),
+        endTime:end.format("YYYY-MM-DDTHH:mm:ss+09:00"),
       }
-        console.log(formattedrireki);
         return formattedrireki;
     }
 
@@ -121,8 +137,8 @@ export default class RirekiInput extends Vue{
         syubetsu:3,
         about:"",
         startDay:moment().date(),
-        startTime:moment().format('hh:mm'),
-        endTime:moment().format('hh:mm')
+        startTime:moment().format('HH:mm'),
+        endTime:moment().format('HH:mm')
       };
     }
 }

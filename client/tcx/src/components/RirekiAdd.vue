@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import {Component, Vue,Prop} from "vue-property-decorator";
-import moment from "moment"
+import moment from "moment-timezone"
 import RirekiInput from '@/components/RirekiInput.vue';
 
 @Component({
@@ -31,8 +31,8 @@ export default class RirekiAdd extends Vue{
       joid:63,
       syubetsu:3,
       about:"",
-      startTime:moment().format('YYYY-MM-DDTHH:mm:ssZ'),
-      endTime:moment().format('YYYY-MM-DDTHH:mm:ssZ'),
+      startTime:moment().format('YYYY-MM-DDTHH:mm:ss'),
+      endTime:moment().format('YYYY-MM-DDTHH:mm:ss'),
     };
 
     isError:boolean = false;
@@ -43,6 +43,7 @@ export default class RirekiAdd extends Vue{
       var url = "http://localhost:8888/rireki/" + String(this.month);
       fetch(url,{
         method: 'POST',
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(this.rireki)
       }).then(response => {
         if (!response.ok) {
