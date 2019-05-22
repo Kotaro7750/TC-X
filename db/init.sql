@@ -1,7 +1,8 @@
 USE TCX;
 CREATE TABLE users(
     joid INT NOT NULL,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    pass TEXT NOT NULL
 );
 
 CREATE TABLE syubetsu_list(

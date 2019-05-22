@@ -1,29 +1,24 @@
 <template>
   <div class="signup">
-    <Logo/>
     <h2>Sign up</h2>
+    <AuthInput @on-submit="SignUp" message="登録"/>
   </div>
 </template>
 
 <script lang="ts">
 import {Component, Vue,Prop} from "vue-property-decorator";
+import AuthInput from '@/components/AuthInput.vue';
 
-import Logo from '@/components/Logo.vue';
 
 @Component({
   components: {
-    Logo,
+    AuthInput,
   }
 })
 
 export default class Signup extends Vue{
-  joid!: Number;
-  name!: string;
-  alert: string = "";
-
-  created(){
-    this.alert = "";
+  SignUp(personalInfo:{joid:number,name:string,password:string}){
+    console.log(personalInfo);
   }
-
 }
 </script>

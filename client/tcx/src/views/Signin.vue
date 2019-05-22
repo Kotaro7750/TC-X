@@ -2,10 +2,7 @@
   <div class="signin">
     <Logo/>
     <h2>Sign in</h2>
-      <label>Name</label>
-      <input type="text" placeholder="Name">
-    <button>Sign in</button>
-
+    <AuthInput @on-submit="SignIn" message="ログイン" />
     <p>You don't have an account?
       <router-link to="/signup">Create account now!</router-link>
     </p>
@@ -14,15 +11,18 @@
 
 <script lang="ts">
 import {Component, Vue} from "vue-property-decorator";
-import Logo from '@/components/Logo.vue';
+import AuthInput from '@/components/AuthInput.vue';
 
 @Component({
   components: {
-    Logo,
+    AuthInput,
   }
 })
 
 export default class Signin extends Vue{
+  SignIn(personalInfo:{joid:number,name:string,password:string}){
+    console.log(personalInfo);
+  }
 
 }
 
