@@ -8,8 +8,8 @@
       <option v-for="month in months" v-bind:key="month"  v-bind:value="month">{{month}}月</option>
     </select>
 
-    <RirekiAdd v-bind:year="selectedYear" v-bind:month="selectedMonth"/>
-    <RirekiList v-bind:year="selectedYear" v-bind:month="selectedMonth" />
+    <RirekiAdd v-bind:year="selectedYear" v-bind:month="selectedMonth" @on-add="onAdd"/>
+    <RirekiList v-bind:year="selectedYear" v-bind:month="selectedMonth" ref="list"/>
   </div>
 </template>
 
@@ -31,5 +31,10 @@ export default class Rireki extends Vue{
 
   selectedYear = 2019;
   selectedMonth = 5;
+
+  onAdd(){
+    let rirekiList:any = this.$refs.list;
+    rirekiList.getRirekiList();
+  }
 }
 </script>

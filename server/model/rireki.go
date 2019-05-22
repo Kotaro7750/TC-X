@@ -78,7 +78,6 @@ func IsContradicted(db *sql.DB, rireki Rireki, month int) ([]*Rireki, error) {
 
 	rows, err := db.Query(fmt.Sprintf("SELECT id,joid,syubetsu,about,start_time,end_time FROM `%s` WHERE (joid = '%d') AND ((`start_time` BETWEEN cast('%s' as DATETIME) AND cast('%s' as DATETIME)) OR (`end_time` BETWEEN cast('%s' as DATETIME) AND cast('%s' as DATETIME)))", tableName, rireki.Joid, formatedStartTime, formatedEndTime, formatedStartTime, formatedEndTime))
 	if err != nil {
-		fmt.Print("1")
 		return nil, err
 	}
 
@@ -87,7 +86,6 @@ func IsContradicted(db *sql.DB, rireki Rireki, month int) ([]*Rireki, error) {
 	for rows.Next() {
 		var contradictedRireki Rireki
 		if err := rows.Scan(&contradictedRireki.ID, &contradictedRireki.Joid, &contradictedRireki.Syubetsu, &contradictedRireki.About, &contradictedRireki.StartTime, &contradictedRireki.EndTime); err != nil {
-			fmt.Print("2")
 			return nil, err
 		}
 		contradictedList = append(contradictedList, &contradictedRireki)

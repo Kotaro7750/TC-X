@@ -3,17 +3,17 @@
     <h2>履歴リスト</h2>
     <p class="listError" v-show="isListError">{{ listError }}</p>
     <p class="deleteError" v-show="isDeleteError">{{ deleteError }}</p>
-    <p class="updateError" v-show="isUpdateError">{{ updateError }}</p>
+    <p class="updateError" v-show="isEditError">{{ editError }}</p>
     <ul>
-        <li v-for="rireki in rirekiList" v-bind:key="rireki.id" v-show="updatableID == -1 || updatableID == rireki.id">
+        <li v-for="rireki in rirekiList" v-bind:key="rireki.id" v-show="editableID == -1 || editableID == rireki.id">
             {{ rireki.id }}
             {{ rireki.syubetsu }}
             {{ rireki.about }}
             {{ rireki.startTime |Time}}〜{{ rireki.endTime |Time}}
-            <button @click="deleteRireki(rireki.id)">delete</button>
-            <button @click="triggerUpdate(rireki.id)" v-if="updatableID == -1">update</button>
-            <button @click="cancelUpdate(rireki.id)" v-else>cancel</button>
-            <RirekiInput v-if="updatableID == rireki.id" @on-submit="updateRireki" v-bind:year="year" v-bind:month="month" v-bind:initData="{
+            <button @click="deleteRireki(rireki.id)">削除</button>
+            <button @click="triggerUpdate(rireki.id)" v-if="editableID == -1">編集</button>
+            <button @click="cancelUpdate(rireki.id)" v-else>キャンセル</button>
+            <RirekiInput v-if="editableID == rireki.id" @on-submit="editRireki" v-bind:year="year" v-bind:month="month" v-bind:initData="{
                 joid:rireki.joid,
                 syubetsu:rireki.syubetsu,
                 about:rireki.about,
@@ -68,9 +68,9 @@ export default class RirekiList extends Vue{
     isDeleteError:boolean = false;
     deleteError:{} = {};
 
-    updatableID:number = -1;
-    isUpdateError:boolean = false;
-    updateError:{} = {};
+    editableID:number = -1;
+    isEditError:boolean = false;
+    editError:{} = {};
 
     @Watch('month') onMonthChanged(){
         this.getRirekiList();
@@ -122,33 +122,33 @@ export default class RirekiList extends Vue{
     }
 
     triggerUpdate(id:number):void{
-        this.updatableID =id;
+        this.editableID =id;
     }
 
     cancelUpdate():void{
-        this.updatableID = -1;
+        this.editableID = -1;
         this.getRirekiList();
     }
 
-    updateRireki(rireki:{joid:number,syubetsu:number,about:string,startTime:string,endTime:string}):void{
-        this.isUpdateError =false;
-        let confirmUpdate = confirm("更新していいですか？");
-        if (confirmUpdate == true) {
-            let url = "http://localhost:8888/rireki/" + String(this.month) + "/63/" + String(this.updatableID);
+    editRireki(rireki:{joid:number,syubetsu:number,about:string,startTime:string,endTime:string}):void{
+        this.isEditError =false;
+        let confirmEdit = confirm("更新していいですか？");
+        if (confirmEdit == true) {
+            let url = "http://localhost:8888/rireki/" + String(this.month) + "/63/" + String(this.editableID);
             fetch(url,{
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(rireki)
             }).then(response => {
                 if (!response.ok) {
-                    this.isUpdateError = true;
+                    this.isEditError = true;
                 }
                 return response.json();
             }).then(json => {
-                this.updateError = json.error;
+                this.editError = json.error;
                 this.getRirekiList();
             })
-            this.updatableID = -1;
+            this.editableID = -1;
             this.getRirekiList();
         }else{
         } 

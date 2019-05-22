@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue,Prop} from "vue-property-decorator";
+import {Component, Vue,Prop,Emit} from "vue-property-decorator";
 import moment from "moment-timezone"
 import RirekiInput from '@/components/RirekiInput.vue';
 
@@ -38,6 +38,11 @@ export default class RirekiAdd extends Vue{
     isError:boolean = false;
     fetchError:{} = {};
 
+    @Emit('on-add')
+    onAdd(){
+      return ;
+    }
+
     addRireki():void{
       this.isError = false;
       var url = "http://localhost:8888/rireki/" + String(this.month);
@@ -54,6 +59,7 @@ export default class RirekiAdd extends Vue{
         return response.json();
       }).then(json => {
         this.fetchError = json.error;
+        this.onAdd();
       })
     }
 
