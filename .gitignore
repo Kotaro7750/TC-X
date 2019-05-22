@@ -7,12 +7,22 @@
 !nginx/Dockerfile
 !nginx/server.conf
 
-!server/Dockerfile
-!server/*.go
-!server/controller/
-!server/model/
+!db/*
 
+!server/Dockerfile
+!server/*
+!server/controller/*
+!server/model/*
+!server/APIError/*
+!server/APIResponse/*
+
+!client/tcx/*
 !client/tcx/src/*
 !client/tcx/src/assets/*
 !client/tcx/src/components/*
 !client/tcx/src/views/*
+
+!client/tcx/dist/*
+!client/tcx/dist/css/*
+!client/tcx/dist/img/*
+!client/tcx/dist/js/*

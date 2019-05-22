@@ -1,8 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+
 import Home from './views/Home.vue';
 import Signup from './views/Signup.vue';
 import Signin from './views/Signin.vue';
+
+import Rireki from './views/Rireki.vue';
 
 Vue.use(Router);
 
@@ -32,6 +35,11 @@ export default new Router({
       path: '/signin',
       name: 'Signin',
       component: Signin,
+    },
+    {
+      path: '/rireki',
+      name: 'Rireki',
+      component: Rireki,
     },
   ],
 });
