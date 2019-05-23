@@ -2,7 +2,8 @@ USE TCX;
 CREATE TABLE users(
     joid INT NOT NULL,
     name TEXT NOT NULL,
-    pass TEXT NOT NULL
+    pass TEXT NOT NULL,
+    token TEXT NOT NULL
 );
 
 CREATE TABLE syubetsu_list(
@@ -27,6 +28,3 @@ INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(63,12,"�
 INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(94,12,"ポスタースタンド",cast('2019-05-16 12:34:00' as DATETIME),cast('2019-05-16 12:56:00' as DATETIME));
 INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(94,12,"会議",cast('2019-05-17 12:34:00' as DATETIME),cast('2019-05-17 12:56:00' as DATETIME));
 
-
-INSERT INTO `users` (joid,name,pass) VALUES(63,"hoge","hogehoge");
-INSERT INTO `users` (joid,name,pass) VALUES(94,"fuga","fugafuga");
