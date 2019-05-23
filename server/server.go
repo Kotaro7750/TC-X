@@ -30,8 +30,10 @@ func main() {
 	router.Use(cors.New(config))
 
 	//routing start
-	router.GET("/users", userctr.All)
-	router.POST("/users", userctr.Add)
+	//router.GET("/users", userctr.All)
+	//router.POST("/users", userctr.Add)
+
+	router.POST("/user", userctr.UserAdd)
 
 	router.GET("/rireki/:month/:joid", rirekictr.PersonalAll)
 	router.POST("/rireki/:month", rirekictr.RirekiAdd)

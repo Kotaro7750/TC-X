@@ -7,13 +7,14 @@ type APIError struct {
 	Message  string `json:"message"`
 }
 
-
 //errorCode is a map of error code
 var errorCode = map[int]string{
 	//User error
 	1: "RequestParameterInvalid", //request parameter is not formatted enough to make SQL query
 	2: "BadRequestParameter",     //request parameter is well-formatted ,but meanless
 	3: "TimeConflicted",          //time of request parameter is conflicted with record in DataBase
+	4: "ResourceAlreadyExit",     //unique resource is already exist
+
 	//Internal Server Error
 	11: "FailedExecQuery", //query string is correct,but execing query failed in some reason
 }

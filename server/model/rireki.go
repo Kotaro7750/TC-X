@@ -28,6 +28,7 @@ func PersonalRirekiAll(db *sql.DB, joid int, month int) ([]*Rireki, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	var rirekiList []*Rireki
 
@@ -80,6 +81,7 @@ func IsContradicted(db *sql.DB, rireki Rireki, month int) ([]*Rireki, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	var contradictedList []*Rireki
 
