@@ -60,6 +60,12 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 		return
 	}
 
+	joid, err := strconv.Atoi(c.Param("joid"))
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "PersonalAll", err.Error())
+		return
+	}
+
 	var rireki model.Rireki
 
 	if err := c.ShouldBindJSON(&rireki); err != nil {
@@ -69,6 +75,11 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 
 	if month != int(rireki.StartTime.Month()) {
 		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiAdd", "URLParam :month not equal with JSONParam")
+		return
+	}
+
+	if joid != rireki.Joid {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiAdd", "URLParam :joid not equal with JSONParam")
 		return
 	}
 
