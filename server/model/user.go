@@ -45,8 +45,8 @@ func UserAll(db *sql.DB) ([]*User, error) {
 	return users, nil
 }
 
-//Insert is a functin to insert user data to dateabase
-func  Insert(db *sql.DB,user User) (*User, error) {
+//UserAdd is a functin to insert user data to dateabase
+func  UserAdd(db *sql.DB,user User) (*User, error) {
 	seed, _ := crand.Int(crand.Reader, big.NewInt(math.MaxInt64))
     rand.Seed(seed.Int64())
 	randomByte := make([]byte, 14)

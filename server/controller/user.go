@@ -3,6 +3,7 @@ package controller
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -58,7 +59,7 @@ func (u *UserCtr) UserAdd(c *gin.Context) {
 		return
 	}
 
-	inserted, err := model.Insert(u.DB,user)
+	added, err := model.UserAdd(u.DB,user)
 
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 11, "UserAdd", err.Error())
@@ -66,8 +67,18 @@ func (u *UserCtr) UserAdd(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"result": inserted,
+		"result": added,
 		"error": nil,
+	})
+	return
+}
+
+//AuthUser is a function to authenticate user
+func (u *UserCtr) AuthUser(c *gin.Context)  {
+	var hashedPass = c.Request.Header["Authorization"][0]
+	fmt.Print(hashedPass)
+	c.JSON(http.StatusOK,gin.H{
+		"header": c.Request.Header["Authorization"],
 	})
 	return
 }

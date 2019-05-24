@@ -1,10 +1,10 @@
 <template>
   <div class="signin">
     <Logo/>
-    <h2>Sign in</h2>
+    <h2>Sign In</h2>
     <AuthInput @on-submit="SignIn" message="ログイン" />
-    <p>You don't have an account?
-      <router-link to="/signup">Create account now!</router-link>
+    <p>まだ登録していない方はこちら
+      <router-link to="/signup">Sign Up</router-link>
     </p>
   </div>
 </template>
@@ -20,9 +20,34 @@ import AuthInput from '@/components/AuthInput.vue';
 })
 
 export default class Signin extends Vue{
+  isError: boolean = false;
+  signInError: string[] = [];
+
+  personalInfo :{
+    joid: number,
+    name: string,
+    hashedPass: string,
+  } = {
+    joid: 0,
+    name: "",
+    hashedPass: "",
+  };
+
   SignIn(personalInfo:{joid:number,name:string,hashedPass:string}){
-    this.$store.dispatch('signIn',personalInfo);
-    console.log(personalInfo);
+    var url = "http://localhost:8888/user";
+    fetch(url,{
+      method: 'GET',
+      headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + personalInfo.hashedPass,},
+    }).then(response => {
+      if (!response.ok) {
+      }else{
+      }
+      return response.json();
+    }).then(json => {
+        //vuexに登録
+        console.log(json.header);
+    });
+
   }
 
 }
