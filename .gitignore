@@ -13,8 +13,8 @@
 !server/*
 !server/controller/*
 !server/model/*
-!server/APIError/*
-!server/APIResponse/*
+!server/apierror/*
+!server/apiresponse/*
 
 !client/tcx/*
 !client/tcx/src/*
