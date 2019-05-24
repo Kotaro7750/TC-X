@@ -59,7 +59,7 @@ func (u *UserCtr) UserAdd(c *gin.Context) {
 		return
 	}
 
-	added, err := model.UserAdd(u.DB,user)
+	added, err := model.UserAdd(u.DB, user)
 
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 11, "UserAdd", err.Error())
@@ -68,16 +68,23 @@ func (u *UserCtr) UserAdd(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"result": added,
-		"error": nil,
+		"error":  nil,
 	})
 	return
 }
 
 //AuthUser is a function to authenticate user
-func (u *UserCtr) AuthUser(c *gin.Context)  {
-	var hashedPass = c.Request.Header["Authorization"][0]
+func (u *UserCtr) AuthUser(c *gin.Context) {
+	var authHeader = c.Request.Header["Authorization"]
+
+	if authHeader == nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 2, "AuthUser", "Authorization header does not exist")
+		return
+	}
+	hashedPass := authHeader[0]
+
 	fmt.Print(hashedPass)
-	c.JSON(http.StatusOK,gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"header": c.Request.Header["Authorization"],
 	})
 	return
