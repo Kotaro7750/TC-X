@@ -72,6 +72,21 @@ export default class RirekiList extends Vue{
     isEditError:boolean = false;
     editError:{} = {};
 
+    personalInfo :{
+      joid: number,
+      name: string,
+      token: string,
+    } = this.$store.getters.userInfo;
+
+    @Watch('userInfo') onUserInfoChanged(){
+      this.personalInfo = this.userInfo;
+    }
+
+    get userInfo(): {joid:number,name:string,token:string}{
+      let userInfo = this.$store.getters.userInfo;
+      return userInfo;
+    }
+
     @Watch('month') onMonthChanged(){
         this.getRirekiList();
     }
@@ -83,7 +98,7 @@ export default class RirekiList extends Vue{
 
     getRirekiList():void{
         this.isListError = false;
-        let url = "http://localhost:8888/rireki/" + String(this.month) + "/63";
+        let url = "http://localhost:8888/rireki/" + String(this.month) + "/" + String(this.personalInfo.joid);
         fetch(url,{
             method: 'GET'
         }).then(response => {
@@ -105,7 +120,7 @@ export default class RirekiList extends Vue{
         this.isDeleteError =false;
         let confirmDelete = confirm("消していいですか？");
         if (confirmDelete == true) {
-            let url = "http://localhost:8888/rireki/" + String(this.month) + "/63/" + String(id);
+            let url = "http://localhost:8888/rireki/" + String(this.month) + "/" + String(this.personalInfo.joid) +"/" + String(id);
             fetch(url,{
                 method: 'DELETE'
             }).then(response => {
@@ -134,7 +149,7 @@ export default class RirekiList extends Vue{
         this.isEditError =false;
         let confirmEdit = confirm("更新していいですか？");
         if (confirmEdit == true) {
-            let url = "http://localhost:8888/rireki/" + String(this.month) + "/63/" + String(this.editableID);
+            let url = "http://localhost:8888/rireki/" + String(this.month) + "/" + String(this.personalInfo.joid) + "/" + String(this.editableID);
             fetch(url,{
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json'},

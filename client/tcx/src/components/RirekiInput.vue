@@ -5,7 +5,7 @@
     <ul v-show="!isInputCorrect">
       <li v-for="errMsg in errMsgs" v-bind:key="errMsg">{{errMsg}}</li>
     </ul>
-    <input type="number" v-model="rireki.joid">
+    {{rireki.joid}}
     <input type="number" v-model="rireki.syubetsu">
     <input type="text" v-model="rireki.about">
 
@@ -52,7 +52,7 @@ export default class RirekiInput extends Vue{
     } = this.initData == null ? 
     //when not initialized
     {
-      joid:63,
+      joid:this.$store.getters.userInfo.joid,
       syubetsu:3,
       about:"",
       startDay:moment().date(),
@@ -133,7 +133,7 @@ export default class RirekiInput extends Vue{
 
     clearInput(){
       this.rireki = {
-        joid:63,
+        joid:this.$store.getters.userInfo.joid,
         syubetsu:3,
         about:"",
         startDay:moment().date(),

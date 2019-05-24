@@ -28,7 +28,7 @@ export default class RirekiAdd extends Vue{
       startTime:string,
       endTime:string,
     } = {
-      joid:63,
+      joid:this.$store.getters.userInfo.joid,
       syubetsu:3,
       about:"",
       startTime:moment().format('YYYY-MM-DDTHH:mm:ss'),

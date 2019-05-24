@@ -46,6 +46,7 @@ export default class App extends Vue{
   }
 
   signOut(){
+    this.$router.push('/');
     this.$store.dispatch('signOut');
   }
 
