@@ -11,34 +11,60 @@ Vue.use(Vuex);
 
 Vue.config.productionTip = false;
 
-new Vue({
-  router,
-  render: (h) => h(App),
-}).$mount('#app');
-
 // TODO: add action
-const store = new Vuex.Store({
+export const store = new Vuex.Store({
   state: {
     // when singnin, this represent joid of that user. if not, -1
     userInfo: {
       signInJoid: -1,
+      name: '',
       apiToken: '',
     },
   },
 
   getters: {
-    joid: (state) => state.userInfo.signInJoid,
-    token: (state) => state.userInfo.apiToken,
+    userInfo: (state) => {
+      let userInfo = {
+        joid: state.userInfo.signInJoid,
+        name: state.userInfo.name,
+        token: state.userInfo.apiToken,
+      };
+      return userInfo;
+    },
+    isSignIn: (state) => {
+      if (state.userInfo.signInJoid === -1) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
 
   mutations: {
-    signIn(state: any , payload: {joid: number, token: string}) {
+    signIn(state: any , payload: {joid: number, name: string, hashedPass:  string, token: string}) {
       state.userInfo.signInJoid = payload.joid;
+      state.userInfo.name = payload.name;
       state.userInfo.apiToken = payload.token;
     },
     signOut(state) {
       state.userInfo.signInJoid = -1;
       state.userInfo.apiToken = '';
+      state.userInfo.name = '';
+    },
+  },
+  actions: {
+    signIn(context, userInfo: {joid: number, name: string, hashedPass: string, token: string}) {
+      context.commit('signIn', userInfo);
+    },
+    signOut(context) {
+      context.commit('signOut');
     },
   },
 });
+
+new Vue({
+  router,
+  store,
+  render: (h) => h(App),
+}).$mount('#app');
+

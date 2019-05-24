@@ -21,6 +21,7 @@ import AuthInput from '@/components/AuthInput.vue';
 
 export default class Signin extends Vue{
   SignIn(personalInfo:{joid:number,name:string,hashedPass:string}){
+    this.$store.dispatch('signIn',personalInfo);
     console.log(personalInfo);
   }
 

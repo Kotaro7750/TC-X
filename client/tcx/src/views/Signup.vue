@@ -46,6 +46,9 @@ export default class Signup extends Vue{
     }).then(json => {
       if (!this.isError) {
         //vuexに登録
+        console.log(json.result);
+        this.$store.dispatch('signIn',json.result);
+        this.$router.push('/');
       }
       this.signUpError = json.error;
     });
