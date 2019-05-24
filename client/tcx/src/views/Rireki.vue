@@ -22,7 +22,16 @@ import RirekiList from '@/components/RirekiList.vue';
   components: {
     RirekiAdd,
     RirekiList,
-  }
+  },
+  beforeRouteEnter: function(to, from, next) {
+    next(component => {
+      if (component.$store.getters.isSignIn == false) {
+        next('/signin');
+      }else{
+        next();
+      }
+    })
+  },
 })
 
 export default class Rireki extends Vue{

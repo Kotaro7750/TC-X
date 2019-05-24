@@ -4,7 +4,7 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav4" aria-controls="navbarNav4" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/">TC-X</a>
+        <router-link to="/" class="navbar-brand" >TC-X</router-link>
         <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav" v-if="!isSignIn">
                 <li class="nav-item active">
@@ -15,8 +15,7 @@
                 </li>
             </ul>
             <ul class="navbar-nav" v-else>
-                <li>{{personalInfo.joid}}</li>
-                <li>{{personalInfo.name}}</li>
+                <li class="nav-link">{{personalInfo.joid}} {{personalInfo.name}}</li>
                 <li class="nav-item active">
                   <router-link to="/" @click.native="signOut" class=nav-link>SignOut</router-link>
                 </li>
