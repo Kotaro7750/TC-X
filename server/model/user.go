@@ -1,15 +1,17 @@
 package model
 
 import (
-	"database/sql"
-	"fmt"
-	"encoding/base64"
 	crand "crypto/rand"
-    "math"
-    "math/big"
-	"math/rand"
-	"io"
+	"database/sql"
+	"encoding/base64"
 	"encoding/hex"
+	"errors"
+	"fmt"
+	"io"
+	"math"
+	"math/big"
+	"math/rand"
+
 	"golang.org/x/crypto/scrypt"
 )
 
@@ -46,34 +48,34 @@ func UserAll(db *sql.DB) ([]*User, error) {
 }
 
 //UserAdd is a functin to insert user data to dateabase
-func  UserAdd(db *sql.DB,user User) (*User, error) {
+func UserAdd(db *sql.DB, user User) (*User, error) {
 	seed, _ := crand.Int(crand.Reader, big.NewInt(math.MaxInt64))
-    rand.Seed(seed.Int64())
+	rand.Seed(seed.Int64())
 	randomByte := make([]byte, 14)
-	
+
 	_, err := io.ReadFull(crand.Reader, randomByte)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	salt := base64.StdEncoding.EncodeToString(randomByte)
 	converted, _ := scrypt.Key([]byte("dkjfkd"), []byte(salt), 16384, 8, 1, 16)
 	token := hex.EncodeToString(converted[:])
 
-	_, err = db.Query(fmt.Sprintf("INSERT users (joid,name,pass,token) VALUES (%d,'%s','%s','%s')", user.Joid, user.Name,user.HashedPass,token))
+	_, err = db.Query(fmt.Sprintf("INSERT users (joid,name,pass,token) VALUES (%d,'%s','%s','%s')", user.Joid, user.Name, user.HashedPass, token))
 	if err != nil {
 		return nil, err
 	}
 
 	return &User{
-		Joid: user.Joid,
-		Name: user.Name,
+		Joid:       user.Joid,
+		Name:       user.Name,
 		HashedPass: "deadbeaf",
-		Token: token,
+		Token:      token,
 	}, nil
 }
 
 //IsAddable is a function to check if adding new user is possible
-func  IsAddable(db *sql.DB, joid int) (bool, error) {
+func IsAddable(db *sql.DB, joid int) (bool, error) {
 	rows, err := db.Query(fmt.Sprintf("SELECT joid,name,pass FROM `users` WHERE joid='%d'", joid))
 	if err != nil {
 		return false, err
@@ -94,7 +96,45 @@ func  IsAddable(db *sql.DB, joid int) (bool, error) {
 	}
 
 	if affectedRows != 0 {
-		return false,nil
+		return false, nil
 	}
 	return true, nil
+}
+
+//AuthUser is a  function to authenticate user by joid and hashedPass
+func AuthUser(db *sql.DB, joid int, hashedPass string) (*User, error) {
+	rows, err := db.Query(fmt.Sprintf("SELECT joid,name,token FROM `users` WHERE joid = %d AND pass = '%s'", joid, hashedPass))
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var user User
+	affectedRows := 0
+	for rows.Next() {
+		if err := rows.Scan(&user.Joid, &user.Name, &user.Token); err != nil {
+			return nil, err
+		}
+		affectedRows = affectedRows + 1
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	if affectedRows >= 2 {
+		err := errors.New("database unique column does not work")
+		return nil, err
+	}
+	if affectedRows == 0 {
+		return nil, nil
+	}
+
+	return &User{
+		Joid:       user.Joid,
+		Name:       user.Name,
+		HashedPass: "deadbeaf",
+		Token:      user.Token,
+	}, nil
 }

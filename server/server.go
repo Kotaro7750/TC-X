@@ -33,7 +33,7 @@ func main() {
 	//router.GET("/users", userctr.All)
 	//router.POST("/users", userctr.Add)
 
-	router.GET("/user", userctr.AuthUser)
+	router.GET("/user/:joid", userctr.AuthUser)
 	router.POST("/user", userctr.UserAdd)
 
 	router.GET("/rireki/:month/:joid", rirekictr.PersonalAll)

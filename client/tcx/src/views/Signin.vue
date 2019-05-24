@@ -2,6 +2,7 @@
   <div class="signin">
     <Logo/>
     <h2>Sign In</h2>
+    <p class="signInError" v-show="isError">{{ signInError }}</p>
     <AuthInput @on-submit="SignIn" message="ログイン" />
     <p>まだ登録していない方はこちら
       <router-link to="/signup">Sign Up</router-link>
@@ -34,18 +35,24 @@ export default class Signin extends Vue{
   };
 
   SignIn(personalInfo:{joid:number,name:string,hashedPass:string}){
-    var url = "http://localhost:8888/user";
+    this.isError = false;
+    let url = "http://localhost:8888/user/" + String(personalInfo.joid);
+    console.log(url);
     fetch(url,{
       method: 'GET',
       headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + personalInfo.hashedPass,},
     }).then(response => {
       if (!response.ok) {
+        this.isError = true;
       }else{
       }
       return response.json();
     }).then(json => {
-        //vuexに登録
-        console.log(json.header);
+      if (!this.isError) {
+        this.$store.dispatch('signIn',json.result);
+        this.$router.push('/');
+      }
+        this.signInError = json.error;
     });
 
   }

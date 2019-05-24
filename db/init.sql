@@ -1,6 +1,6 @@
 USE TCX;
 CREATE TABLE users(
-    joid INT NOT NULL,
+    joid INT NOT NULL UNIQUE,
     name TEXT NOT NULL,
     pass TEXT NOT NULL,
     token TEXT NOT NULL

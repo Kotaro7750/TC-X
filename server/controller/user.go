@@ -3,8 +3,9 @@ package controller
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -75,17 +76,42 @@ func (u *UserCtr) UserAdd(c *gin.Context) {
 
 //AuthUser is a function to authenticate user
 func (u *UserCtr) AuthUser(c *gin.Context) {
+	joid, err := strconv.Atoi(c.Param("joid"))
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "AuthUser", err.Error())
+		return
+	}
+
 	var authHeader = c.Request.Header["Authorization"]
 
 	if authHeader == nil {
 		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 2, "AuthUser", "Authorization header does not exist")
 		return
 	}
-	hashedPass := authHeader[0]
+	protocol := strings.Split(authHeader[0], " ")[0]
+	hashedPass := strings.Split(authHeader[0], " ")[1]
 
-	fmt.Print(hashedPass)
+	if protocol != "Bearer" || hashedPass == "" {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 2, "AuthUser", "Authorization header is not bearer")
+		return
+	}
+
+	//TODO: hashedPass validation
+
+	hitUser, err := model.AuthUser(u.DB, joid, hashedPass)
+
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 11, "AuthUser", err.Error())
+		return
+	}
+
+	if hitUser == nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 5, "AuthUser", "sign in failed")
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"header": c.Request.Header["Authorization"],
+		"result": hitUser,
+		"error":  nil,
 	})
 	return
 }

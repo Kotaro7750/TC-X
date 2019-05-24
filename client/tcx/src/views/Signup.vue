@@ -32,6 +32,7 @@ export default class Signup extends Vue{
   };
 
   SignUp(personalInfo:{joid:number,name:string,hashedPass:string}){
+    this.isError = false;
     var url = "http://localhost:8888/user";
     fetch(url,{
       method: 'POST',
@@ -45,8 +46,6 @@ export default class Signup extends Vue{
       return response.json();
     }).then(json => {
       if (!this.isError) {
-        //vuexに登録
-        console.log(json.result);
         this.$store.dispatch('signIn',json.result);
         this.$router.push('/');
       }
