@@ -38,3 +38,8 @@ export default class Rireki extends Vue{
   }
 }
 </script>
+
+
+<style scoped>
+/* TODO: add css */ 
+</style>

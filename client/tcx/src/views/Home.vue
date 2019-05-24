@@ -23,3 +23,8 @@ export default class Home extends Vue {
   msg!: string;
 }
 </script>
+
+<style scoped>
+/* TODO: add css */
+
+</style>

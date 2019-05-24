@@ -67,7 +67,7 @@ func (u *UserCtr) UserAdd(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"result": inserted,
-		"error": "dfdfd",
+		"error": nil,
 	})
 	return
 }

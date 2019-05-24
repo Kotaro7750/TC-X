@@ -1,7 +1,8 @@
 <template>
   <div class="signup">
     <h2>Sign up</h2>
-    <AuthInput @on-submit="SignUp" message="登録"/>
+    <p class="signUpError" v-show="isError">{{ signUpError }}</p>
+    <AuthInput @on-submit="onSubmit" message="登録"/>
   </div>
 </template>
 
@@ -17,8 +18,46 @@ import AuthInput from '@/components/AuthInput.vue';
 })
 
 export default class Signup extends Vue{
-  SignUp(personalInfo:{joid:number,name:string,password:string}){
-    console.log(personalInfo);
+  isError: boolean = false;
+  signUpError: string[] = [];
+
+  personalInfo :{
+    joid: number,
+    name: string,
+    hashedPass: string,
+  } = {
+    joid: 0,
+    name: "",
+    hashedPass: "",
+  };
+
+  SignUp(personalInfo:{joid:number,name:string,hashedPass:string}){
+    var url = "http://localhost:8888/user";
+    fetch(url,{
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(this.personalInfo)
+    }).then(response => {
+      if (!response.ok) {
+        this.isError = true;
+      }else{
+      }
+      return response.json();
+    }).then(json => {
+      if (!this.isError) {
+        //vuexに登録
+      }
+      this.signUpError = json.error;
+    });
+  }
+
+  onSubmit(personalInfo:{joid:number,name:string,hashedPass:string}){
+    this.personalInfo = personalInfo;
+    this.SignUp(this.personalInfo);
   }
 }
 </script>
+
+<style scoped>
+/* TODO: add css */
+</style>

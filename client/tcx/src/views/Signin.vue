@@ -20,13 +20,14 @@ import AuthInput from '@/components/AuthInput.vue';
 })
 
 export default class Signin extends Vue{
-  SignIn(personalInfo:{joid:number,name:string,password:string}){
+  SignIn(personalInfo:{joid:number,name:string,hashedPass:string}){
     console.log(personalInfo);
   }
 
 }
-
-
-  
-
 </script>
+
+<style scoped>
+/* TODO: add css */ 
+</style>
+

@@ -76,6 +76,7 @@ export default class RirekiAdd extends Vue{
 </script>
 
 <style scoped>
+/* TODO: add css */
 .fetchError { 
   padding:12px; font-weight:850; color:#262626; background:#FFEBE8; border:2px solid #990000; 
   }
