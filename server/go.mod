@@ -10,4 +10,6 @@ require (
 	github.com/golang/protobuf v1.3.1 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
 	github.com/ugorji/go/codec v0.0.0-20190320090025-2dc34c0b8780 // indirect
+	golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f
+	google.golang.org/appengine v1.6.0 // indirect
 )

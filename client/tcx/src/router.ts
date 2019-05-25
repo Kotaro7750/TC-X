@@ -41,5 +41,10 @@ export default new Router({
       name: 'Rireki',
       component: Rireki,
     },
+    {
+      path: '*',
+      name: '404',
+      component: Home,
+    },
   ],
 });

@@ -28,7 +28,7 @@ export default class RirekiAdd extends Vue{
       startTime:string,
       endTime:string,
     } = {
-      joid:63,
+      joid:this.$store.getters.userInfo.joid,
       syubetsu:3,
       about:"",
       startTime:moment().format('YYYY-MM-DDTHH:mm:ss'),
@@ -45,10 +45,10 @@ export default class RirekiAdd extends Vue{
 
     addRireki():void{
       this.isError = false;
-      var url = "http://localhost:8888/rireki/" + String(this.month);
+      var url = "http://localhost:8888/rireki/" + String(this.month) + "/" + String(this.$store.getters.userInfo.joid);
       fetch(url,{
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
         body: JSON.stringify(this.rireki)
       }).then(response => {
         if (!response.ok) {
@@ -76,6 +76,7 @@ export default class RirekiAdd extends Vue{
 </script>
 
 <style scoped>
+/* TODO: add css */
 .fetchError { 
   padding:12px; font-weight:850; color:#262626; background:#FFEBE8; border:2px solid #990000; 
   }

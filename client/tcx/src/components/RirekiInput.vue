@@ -5,16 +5,33 @@
     <ul v-show="!isInputCorrect">
       <li v-for="errMsg in errMsgs" v-bind:key="errMsg">{{errMsg}}</li>
     </ul>
-    <input type="number" v-model="rireki.joid">
-    <input type="number" v-model="rireki.syubetsu">
-    <input type="text" v-model="rireki.about">
+    {{rireki.joid}}
+    <p>
+      <label for="syubetsu">業務種別</label>
+      <input type="number" id="syubetsu" v-model="rireki.syubetsu">
+    </p>
 
-    <select v-model="rireki.startDay">
-      <option v-for="day in days" v-bind:key="day"  v-bind:value="day">{{day}}日</option>
-    </select>
-    <input type="time" v-model="rireki.startTime">
+    <p>
+      <label for="about">業務内容</label>
+      <input type="text" id="about" v-model="rireki.about">
+    </p>
 
-    <input type="time" v-model="rireki.endTime">
+    <p>
+      <label for="startday">日付</label>
+      <select id="startday" v-model="rireki.startDay">
+        <option v-for="day in days" v-bind:key="day"  v-bind:value="day">{{day}}日</option>
+      </select>
+    </p>
+
+    <p>
+      <label for="start">開始時間</label>
+      <input type="time" id="start" v-model="rireki.startTime">
+    </p>
+
+    <p>
+      <label for="end">終了時間</label>
+      <input type="time" id="end" v-model="rireki.endTime">
+    </p>
     <button @click="onSubmit" v-show="isInputCorrect">送信</button>
   </div>   
 </template>
@@ -52,7 +69,7 @@ export default class RirekiInput extends Vue{
     } = this.initData == null ? 
     //when not initialized
     {
-      joid:63,
+      joid:this.$store.getters.userInfo.joid,
       syubetsu:3,
       about:"",
       startDay:moment().date(),
@@ -81,8 +98,8 @@ export default class RirekiInput extends Vue{
       }
 
       let formattedrireki = {
-        joid:this.rireki.joid,
-        syubetsu:this.rireki.syubetsu,
+        joid:Number(this.rireki.joid),
+        syubetsu:Number(this.rireki.syubetsu),
         about:this.rireki.about,
         startTime:start.format("YYYY-MM-DDTHH:mm:ss+09:00"),
         endTime:end.format("YYYY-MM-DDTHH:mm:ss+09:00"),
@@ -133,7 +150,7 @@ export default class RirekiInput extends Vue{
 
     clearInput(){
       this.rireki = {
-        joid:63,
+        joid:this.$store.getters.userInfo.joid,
         syubetsu:3,
         about:"",
         startDay:moment().date(),
@@ -143,4 +160,9 @@ export default class RirekiInput extends Vue{
     }
 }
 </script>
+
+<style scoped>
+/* add css */ 
+
+</style>
 

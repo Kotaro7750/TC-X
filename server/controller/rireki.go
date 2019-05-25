@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"server/apiresponse"
+	"server/auth"
 	"server/model"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,7 @@ type RirekiCtr struct {
 
 //PersonalAll is a function to list up all indivisual rireki of month
 func (r *RirekiCtr) PersonalAll(c *gin.Context) {
+
 	month, err := strconv.Atoi(c.Param("month"))
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "PersonalAll", err.Error())
@@ -27,6 +29,12 @@ func (r *RirekiCtr) PersonalAll(c *gin.Context) {
 	joid, err := strconv.Atoi(c.Param("joid"))
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "PersonalAll", err.Error())
+		return
+	}
+
+	ca := &auth.CertCtr{DB: r.DB}
+	if authOk := ca.AuthWithToken(c, joid); !authOk {
+		apiresponse.APIResponse(c, http.StatusUnauthorized, nil, 5, "PersonalAll", "Authentication Failed")
 		return
 	}
 
@@ -60,6 +68,18 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 		return
 	}
 
+	joid, err := strconv.Atoi(c.Param("joid"))
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiAdd", err.Error())
+		return
+	}
+
+	ca := &auth.CertCtr{DB: r.DB}
+	if authOk := ca.AuthWithToken(c, joid); !authOk {
+		apiresponse.APIResponse(c, http.StatusUnauthorized, nil, 5, "RirekiAdd", "Authentication Failed")
+		return
+	}
+
 	var rireki model.Rireki
 
 	if err := c.ShouldBindJSON(&rireki); err != nil {
@@ -69,6 +89,11 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 
 	if month != int(rireki.StartTime.Month()) {
 		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiAdd", "URLParam :month not equal with JSONParam")
+		return
+	}
+
+	if joid != rireki.Joid {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiAdd", "URLParam :joid not equal with JSONParam")
 		return
 	}
 
@@ -114,6 +139,12 @@ func (r *RirekiCtr) RirekiDelete(c *gin.Context) {
 		return
 	}
 
+	ca := &auth.CertCtr{DB: r.DB}
+	if authOk := ca.AuthWithToken(c, joid); !authOk {
+		apiresponse.APIResponse(c, http.StatusUnauthorized, nil, 5, "RirekiDelete", "Authentication Failed")
+		return
+	}
+
 	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
@@ -148,6 +179,11 @@ func (r *RirekiCtr) RirekiUpdate(c *gin.Context) {
 
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiUpdate", err.Error())
+		return
+	}
+	ca := &auth.CertCtr{DB: r.DB}
+	if authOk := ca.AuthWithToken(c, joid); !authOk {
+		apiresponse.APIResponse(c, http.StatusUnauthorized, nil, 5, "RirekiUpdate", "Authentication Failed")
 		return
 	}
 

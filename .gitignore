@@ -13,8 +13,9 @@
 !server/*
 !server/controller/*
 !server/model/*
-!server/APIError/*
-!server/APIResponse/*
+!server/apierror/*
+!server/apiresponse/*
+!server/auth/*
 
 !client/tcx/*
 !client/tcx/src/*
