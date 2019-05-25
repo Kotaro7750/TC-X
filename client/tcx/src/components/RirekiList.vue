@@ -100,7 +100,8 @@ export default class RirekiList extends Vue{
         this.isListError = false;
         let url = "http://localhost:8888/rireki/" + String(this.month) + "/" + String(this.personalInfo.joid);
         fetch(url,{
-            method: 'GET'
+            method: 'GET',
+            headers: {'Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
         }).then(response => {
             if (!response.ok) {
                 this.isListError =true;
@@ -122,7 +123,8 @@ export default class RirekiList extends Vue{
         if (confirmDelete == true) {
             let url = "http://localhost:8888/rireki/" + String(this.month) + "/" + String(this.personalInfo.joid) +"/" + String(id);
             fetch(url,{
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {'Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
             }).then(response => {
                 if (!response.ok) {
                     this.isDeleteError = true;
@@ -152,7 +154,7 @@ export default class RirekiList extends Vue{
             let url = "http://localhost:8888/rireki/" + String(this.month) + "/" + String(this.personalInfo.joid) + "/" + String(this.editableID);
             fetch(url,{
                 method: 'PATCH',
-                headers: {'Content-Type': 'application/json'},
+                headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
                 body: JSON.stringify(rireki)
             }).then(response => {
                 if (!response.ok) {

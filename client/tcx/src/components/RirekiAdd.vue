@@ -48,7 +48,7 @@ export default class RirekiAdd extends Vue{
       var url = "http://localhost:8888/rireki/" + String(this.month) + "/" + String(this.$store.getters.userInfo.joid);
       fetch(url,{
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
         body: JSON.stringify(this.rireki)
       }).then(response => {
         if (!response.ok) {

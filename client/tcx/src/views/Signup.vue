@@ -1,7 +1,7 @@
 <template>
   <div class="signup">
     <h2>Sign up</h2>
-    <p class="signUpError" v-show="isError">{{ signUpError }}</p>
+    <div class="alert alert-danger" role="alert" v-show="isError">{{ signUpError }}</div>
     <AuthInput @on-submit="onSubmit" message="登録"/>
   </div>
 </template>

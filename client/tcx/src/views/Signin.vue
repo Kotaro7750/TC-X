@@ -2,7 +2,7 @@
   <div class="signin">
     <Logo/>
     <h2>Sign In</h2>
-    <p class="signInError" v-show="isError">{{ signInError }}</p>
+    <div class="alert alert-danger" role="alert" v-show="isError">{{ signInError }}</div>
     <AuthInput @on-submit="SignIn" message="ログイン" />
     <p>まだ登録していない方はこちら
       <router-link to="/signup">Sign Up</router-link>

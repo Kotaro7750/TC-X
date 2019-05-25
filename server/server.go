@@ -34,6 +34,8 @@ func main() {
 	router.GET("/user/:joid", userctr.AuthUser)
 	router.POST("/user", userctr.UserAdd)
 
+	router.POST("/auth", userctr.TestAuth)
+
 	router.GET("/rireki/:month/:joid", rirekictr.PersonalAll)
 	router.POST("/rireki/:month/:joid", rirekictr.RirekiAdd)
 	router.DELETE("/rireki/:month/:joid/:id", rirekictr.RirekiDelete)
