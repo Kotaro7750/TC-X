@@ -23,6 +23,11 @@ func (ca *CertCtr) AuthWithToken(c *gin.Context, joid int) bool {
 		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 2, "AuthWithToken", "Authorization header does not exist")
 		return false
 	}
+
+	if len(strings.Split(authHeader[0], " ")) <= 1 {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 2, "AuthWithToken", "Authorization header does not contain token")
+		return false
+	}
 	protocol := strings.Split(authHeader[0], " ")[0]
 	token := strings.Split(authHeader[0], " ")[1]
 

@@ -11,7 +11,6 @@ Vue.use(Vuex);
 
 Vue.config.productionTip = false;
 
-// TODO: add action
 export const store = new Vuex.Store({
   state: {
     // when singnin, this represent joid of that user. if not, -1
