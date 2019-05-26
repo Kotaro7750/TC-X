@@ -6,6 +6,7 @@ import Signup from './views/Signup.vue';
 import Signin from './views/Signin.vue';
 
 import Rireki from './views/Rireki.vue';
+import Syubetsu from './views/Syubetsu.vue';
 
 Vue.use(Router);
 
@@ -40,6 +41,11 @@ export default new Router({
       path: '/rireki',
       name: 'Rireki',
       component: Rireki,
+    },
+    {
+      path: '/syubetsu',
+      name: 'Syubetsu',
+      component: Syubetsu,
     },
     {
       path: '*',
