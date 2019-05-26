@@ -25,17 +25,27 @@ func main() {
 	defer db.Close()
 
 	userctr := &controller.UserCtr{DB: db}
+	syubetsuctr := &controller.SyubetsuCtr{DB: db}
 	rirekictr := &controller.RirekiCtr{DB: db}
 
 	router.Use(cors.New(config))
 
 	//routing start
 
+	//Authentication
+	router.POST("/auth", userctr.TestAuth)
+
+	//User
 	router.GET("/user/:joid", userctr.AuthUser)
 	router.POST("/user", userctr.UserAdd)
 
-	router.POST("/auth", userctr.TestAuth)
+	//Syubetsu
+	router.GET("/syubetsu", syubetsuctr.SyubetsuAll)
+	router.POST("/syubetsu", syubetsuctr.SyubetsuAdd)
+	router.DELETE("/syubetsu/:syubetsu", syubetsuctr.SyubetsuDelete)
+	router.PATCH("/syubetsu/:syubetsu", syubetsuctr.SyubetsuUpdate)
 
+	//Rireki
 	router.GET("/rireki/:month/:joid", rirekictr.PersonalAll)
 	router.POST("/rireki/:month/:joid", rirekictr.RirekiAdd)
 	router.DELETE("/rireki/:month/:joid/:id", rirekictr.RirekiDelete)
