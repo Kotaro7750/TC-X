@@ -1,6 +1,5 @@
 <template>
   <div class="syubetsu">
-
     <SyubetsuAdd  @on-add="onAdd"/>
     <SyubetsuList  ref="list"/>
   </div>
@@ -34,7 +33,6 @@ export default class Syubetsu extends Vue{
   }
 }
 </script>
-
 
 <style scoped>
 /* TODO: add css */ 
