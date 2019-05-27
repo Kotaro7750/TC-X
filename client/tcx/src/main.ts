@@ -25,6 +25,7 @@ export const store = new Vuex.Store({
        salary:  1000,
       },
     ],
+    noteList: [''],
   },
 
   getters: {
@@ -47,6 +48,10 @@ export const store = new Vuex.Store({
     getSyubetsuList: (state) => {
       return state.syubetsuList;
     },
+
+    getNoteList: (state) => {
+      return state.noteList;
+    },
   },
 
   mutations: {
@@ -63,6 +68,9 @@ export const store = new Vuex.Store({
     getSyubetsuList(state, payload: Array<{syubetsu: number, name: string, salary: number}> ) {
       state.syubetsuList = payload;
     },
+    getNoteList(state, payload: string[]) {
+      state.noteList = payload;
+    },
   },
   actions: {
     signIn(context, userInfo: {joid: number, name: string, hashedPass: string, token: string}) {
@@ -74,7 +82,6 @@ export const store = new Vuex.Store({
 
     getSyubetsuList(context) {
       return new Promise((resolve, reject) => {
-        context.commit('syubetsuLoading');
         const url = 'http://localhost:8888/syubetsu';
         let syubetsuList: Array<{syubetsu: number, name: string, salary: number}> = [];
         fetch(url, {
@@ -87,6 +94,26 @@ export const store = new Vuex.Store({
           } else {
             syubetsuList = json.result;
             context.commit('getSyubetsuList', syubetsuList);
+            resolve();
+          }
+        });
+      });
+    },
+
+    getNoteList(context) {
+      return new Promise((resolve, reject) => {
+        const url = 'http://localhost:8888/note';
+        let noteList: string[] = [];
+        fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+          return response.json();
+        }).then((json) => {
+          if (json.error != null) {
+            reject(json.error);
+          } else {
+            noteList = json.result;
+            context.commit('getNoteList', noteList);
             resolve();
           }
         });
