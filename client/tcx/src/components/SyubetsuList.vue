@@ -4,7 +4,8 @@
     <p class="listError" v-show="isListError">{{ listError }}</p>
     <p class="deleteError" v-show="isDeleteError">{{ deleteError }}</p>
     <p class="updateError" v-show="isEditError">{{ editError }}</p>
-    <ul>
+    <p class="loader" v-if="isLoading">Loading</p>
+    <ul v-else>
         <li v-for="syubetsu in syubetsuList" v-bind:key="syubetsu.syubetsu" v-show="editableID == -1 || editableID == syubetsu.syubetsu">
             {{ syubetsu.syubetsu }}
             {{ syubetsu.name }}
@@ -35,6 +36,7 @@ import SyubetsuInput from '@/components/SyubetsuInput.vue';
 
 export default class SyubetsuList extends Vue{
 
+    isLoading = false;
     syubetsuList: {
         syubetsu:number,
         name: string,
@@ -53,29 +55,20 @@ export default class SyubetsuList extends Vue{
 
 
     created () {
-        this.isListError = false;
         this.getSyubetsuList();
     }
 
+
     getSyubetsuList():void{
         this.isListError = false;
-        let url = "http://localhost:8888/syubetsu";
-        fetch(url,{
-            method: 'GET',
-            headers: {'Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
-        }).then(response => {
-            if (!response.ok) {
-                this.isListError =true;
-            }
-            return response.json();
-        }).then(json =>{
-            this.listError = json.error;
-            this.loadJSONToSyubetsuList(json);
-        })
-    }
-
-    loadJSONToSyubetsuList(json :any):void{
-        this.syubetsuList = json.result;
+        this.isLoading = true;
+        this.$store.dispatch('getSyubetsuList').then(() => {
+            this.syubetsuList = this.$store.getters.getSyubetsuList
+            this.isLoading = false;
+        }).catch((error) => {
+            this.listError = error;
+            this.isListError = true
+        });
     }
 
     deleteSyubetsu(id:number):void{
@@ -140,4 +133,65 @@ export default class SyubetsuList extends Vue{
 .listError { 
   padding:12px; font-weight:850; color:#262626; background:#FFEBE8; border:2px solid #990000; 
   }
+
+.loader,
+.loader:before,
+.loader:after {
+  background: #ffffff;
+  -webkit-animation: load1 1s infinite ease-in-out;
+  animation: load1 1s infinite ease-in-out;
+  width: 1em;
+  height: 4em;
+}
+.loader {
+  color: #174dc2;
+  text-indent: -9999em;
+  margin: 88px auto;
+  position: relative;
+  font-size: 11px;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.loader:before,
+.loader:after {
+  position: absolute;
+  top: 0;
+  content: '';
+}
+.loader:before {
+  left: -1.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 1.5em;
+}
+@-webkit-keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 0;
+    height: 4em;
+  }
+  40% {
+    box-shadow: 0 -2em;
+    height: 5em;
+  }
+}
+@keyframes load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 0;
+    height: 4em;
+  }
+  40% {
+    box-shadow: 0 -2em;
+    height: 5em;
+  }
+}
+
 </style>

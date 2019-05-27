@@ -89,6 +89,7 @@ export default class RirekiInput extends Vue{
 
     days = this.dayOfMonth(this.month);
 
+    isLoading = false;
     isListError = false;
     listError:{} = {};
     syubetsuList:{syubetsu:number,name:string,salary:number}[] = [];
@@ -115,7 +116,6 @@ export default class RirekiInput extends Vue{
     }
 
     created(){
-      //this.syubetsuList = this.getSyubetsuList();
       this.getSyubetsuList();
     }
 
@@ -160,24 +160,16 @@ export default class RirekiInput extends Vue{
       return days;
     }
 
-    getSyubetsuList(){//:{syubetsu:number,name:string,salary:number}[]{
+    getSyubetsuList():void{
         this.isListError = false;
-        let url = "http://localhost:8888/syubetsu";
-        let list:{syubetsu:number,name:string,salary:number}[] = [];
-        fetch(url,{
-            method: 'GET',
-            headers: {'Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
-        }).then(response => {
-            if (!response.ok) {
-                this.isListError =true;
-            }
-            return response.json();
-        }).then(json =>{
-            this.listError = json.error;
-            this.syubetsuList = json.result;
-            list = json.result;
-        })
-        //return list;
+        this.isLoading = true;
+        this.$store.dispatch('getSyubetsuList').then(() => {
+            this.syubetsuList = this.$store.getters.getSyubetsuList
+            this.isLoading = false;
+        }).catch((error) => {
+            this.listError = error;
+            this.isListError = true
+        });
     }
 
     clearInput(){

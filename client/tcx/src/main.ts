@@ -19,6 +19,12 @@ export const store = new Vuex.Store({
       name: '',
       apiToken: '',
     },
+    syubetsuList: [
+      {syubetsu: 0,
+       name: '',
+       salary:  1000,
+      },
+    ],
   },
 
   getters: {
@@ -37,6 +43,10 @@ export const store = new Vuex.Store({
         return true;
       }
     },
+
+    getSyubetsuList: (state) => {
+      return state.syubetsuList;
+    },
   },
 
   mutations: {
@@ -50,6 +60,9 @@ export const store = new Vuex.Store({
       state.userInfo.apiToken = '';
       state.userInfo.name = '';
     },
+    getSyubetsuList(state, payload: Array<{syubetsu: number, name: string, salary: number}> ) {
+      state.syubetsuList = payload;
+    },
   },
   actions: {
     signIn(context, userInfo: {joid: number, name: string, hashedPass: string, token: string}) {
@@ -57,6 +70,27 @@ export const store = new Vuex.Store({
     },
     signOut(context) {
       context.commit('signOut');
+    },
+
+    getSyubetsuList(context) {
+      return new Promise((resolve, reject) => {
+        context.commit('syubetsuLoading');
+        const url = 'http://localhost:8888/syubetsu';
+        let syubetsuList: Array<{syubetsu: number, name: string, salary: number}> = [];
+        fetch(url, {
+            method: 'GET',
+        }).then((response) => {
+          return response.json();
+        }).then((json) => {
+          if (json.error != null) {
+            reject(json.error);
+          } else {
+            syubetsuList = json.result;
+            context.commit('getSyubetsuList', syubetsuList);
+            resolve();
+          }
+        });
+      });
     },
   },
 });
@@ -66,4 +100,3 @@ new Vue({
   store,
   render: (h) => h(App),
 }).$mount('#app');
-
