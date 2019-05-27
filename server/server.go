@@ -29,6 +29,7 @@ func main() {
 	userctr := &controller.UserCtr{DB: db}
 	syubetsuctr := &controller.SyubetsuCtr{DB: db}
 	rirekictr := &controller.RirekiCtr{DB: db}
+	notectr := &controller.NoteCtr{DB: db}
 
 	router.Use(cors.New(config))
 
@@ -52,6 +53,11 @@ func main() {
 	router.POST("/rireki/:month/:joid", rirekictr.RirekiAdd)
 	router.DELETE("/rireki/:month/:joid/:id", rirekictr.RirekiDelete)
 	router.PATCH("/rireki/:month/:joid/:id", rirekictr.RirekiUpdate)
+
+	//Note
+	router.GET("/note", notectr.NoteAll)
+	router.POST("/note/:year/:month", notectr.NoteAdd)
+	router.DELETE("/note/:year/:month", notectr.NoteDelete)
 
 	//404
 	router.NoRoute(func(c *gin.Context) {
