@@ -7,7 +7,7 @@
     <ul>
         <li v-for="rireki in rirekiList" v-bind:key="rireki.id" v-show="editableID == -1 || editableID == rireki.id">
             {{ rireki.id }}
-            {{ syubetsuToAbout(rireki.syubetsu) }}
+            {{ syubetsuNameMap[rireki.syubetsu] }}
             {{ rireki.about }}
             {{ rireki.startTime |Time}}〜{{ rireki.endTime |Time}}
             <button @click="deleteRireki(rireki.id)">削除</button>
@@ -80,6 +80,7 @@ export default class RirekiList extends Vue{
 
     isLoading = false;
     syubetsuList:{syubetsu:number,name:string,salary:number}[] = [];
+    syubetsuNameMap: {[key: string]: string} = {}; 
 
     @Watch('userInfo') onUserInfoChanged(){
       this.personalInfo = this.userInfo;
@@ -180,6 +181,9 @@ export default class RirekiList extends Vue{
         this.isLoading = true;
         this.$store.dispatch('getSyubetsuList').then(() => {
             this.syubetsuList = this.$store.getters.getSyubetsuList
+            for(let i  in this.syubetsuList){
+                this.syubetsuNameMap[this.syubetsuList[i].syubetsu] = this.syubetsuList[i].name;
+            }
             this.isLoading = false;
         }).catch((error) => {
             this.listError = error;
@@ -187,14 +191,7 @@ export default class RirekiList extends Vue{
         });
     }
 
-    syubetsuToAbout(key:string):string{
-        let syubetsuMap: {[key: string]: string} = {}; 
-        for(let i  in this.syubetsuList){
-            syubetsuMap[this.syubetsuList[i].syubetsu] = this.syubetsuList[i].name;
-        }
-        return syubetsuMap[key];
 
-    }
 }
 </script>
 
