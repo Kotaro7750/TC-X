@@ -6,9 +6,9 @@ CREATE TABLE users(
     token TEXT NOT NULL
 );
 
-CREATE TABLE syubetsu_list(
+CREATE TABLE syubetsu(
     name TEXT NOT NULL,
-    syubetsu TEXT NOT NULL,
+    syubetsu INT NOT NULL UNIQUE,
     salary INT NOT NULL
 );
 
@@ -28,3 +28,6 @@ INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(63,12,"�
 INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(94,12,"ポスタースタンド",cast('2019-05-16 12:34:00' as DATETIME),cast('2019-05-16 12:56:00' as DATETIME));
 INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(94,12,"会議",cast('2019-05-17 12:34:00' as DATETIME),cast('2019-05-17 12:56:00' as DATETIME));
 
+
+INSERT INTO syubetsu (name,syubetsu,salary) VALUES("窓口",3,1000);
+INSERT INTO syubetsu (name,syubetsu,salary) VALUES("広報局",12,1000);

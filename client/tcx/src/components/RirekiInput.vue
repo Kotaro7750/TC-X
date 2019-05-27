@@ -8,7 +8,10 @@
     {{rireki.joid}}
     <p>
       <label for="syubetsu">業務種別</label>
-      <input type="number" id="syubetsu" v-model="rireki.syubetsu">
+      <!-- <input type="number" id="syubetsu" v-model="rireki.syubetsu"> -->
+      <select id="syubetsu" v-model="rireki.syubetsu">
+        <option v-for="syubetsu in syubetsuList" v-bind:key="syubetsu.syubetsu"  v-bind:value="syubetsu.syubetsu">{{syubetsu.name}}</option>
+      </select>
     </p>
 
     <p>
@@ -86,6 +89,11 @@ export default class RirekiInput extends Vue{
 
     days = this.dayOfMonth(this.month);
 
+    isLoading = false;
+    isListError = false;
+    listError:{} = {};
+    syubetsuList:{syubetsu:number,name:string,salary:number}[] = [];
+
     errMsgs: string[] = [];
 
     @Emit('on-submit')
@@ -105,6 +113,10 @@ export default class RirekiInput extends Vue{
         endTime:end.format("YYYY-MM-DDTHH:mm:ss+09:00"),
       }
         return formattedrireki;
+    }
+
+    created(){
+      this.getSyubetsuList();
     }
 
     //validate if input is correct
@@ -146,6 +158,18 @@ export default class RirekiInput extends Vue{
         days[i] = i + 1;
       }
       return days;
+    }
+
+    getSyubetsuList():void{
+        this.isListError = false;
+        this.isLoading = true;
+        this.$store.dispatch('getSyubetsuList').then(() => {
+            this.syubetsuList = this.$store.getters.getSyubetsuList
+            this.isLoading = false;
+        }).catch((error) => {
+            this.listError = error;
+            this.isListError = true
+        });
     }
 
     clearInput(){
