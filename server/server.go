@@ -2,6 +2,8 @@ package main
 
 import (
 	"database/sql"
+	"net/http"
+	"server/apiresponse"
 	"server/controller"
 
 	"github.com/gin-contrib/cors"
@@ -50,6 +52,12 @@ func main() {
 	router.POST("/rireki/:month/:joid", rirekictr.RirekiAdd)
 	router.DELETE("/rireki/:month/:joid/:id", rirekictr.RirekiDelete)
 	router.PATCH("/rireki/:month/:joid/:id", rirekictr.RirekiUpdate)
+
+	//404
+	router.NoRoute(func(c *gin.Context) {
+		apiresponse.APIResponse(c, http.StatusNotFound, nil, 1, "main", "No route fo this request")
+		return
+	})
 
 	router.Run(":8888")
 }
