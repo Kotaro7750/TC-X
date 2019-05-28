@@ -20,8 +20,8 @@ type Rireki struct {
 
 //PersonalRirekiAll is a function to select all data of joid from table rireki
 //table should decided by client ,but month is hard coded now
-func PersonalRirekiAll(db *sql.DB, joid int, month int) ([]*Rireki, error) {
-	tableName := strconv.Itoa(month) + "_rireki"
+func PersonalRirekiAll(db *sql.DB, joid int, year int, month int) ([]*Rireki, error) {
+	tableName := strconv.Itoa(year) + "_" + strconv.Itoa(month) + "_rireki"
 
 	rows, err := db.Query(fmt.Sprintf("SELECT id,joid,syubetsu,about,start_time,end_time FROM %s WHERE joid=%d", tableName, joid))
 
@@ -55,8 +55,8 @@ func PersonalRirekiAll(db *sql.DB, joid int, month int) ([]*Rireki, error) {
 
 //RirekiAdd is a function to insert a rireki to table rireki of month
 //table should decided by client ,but month is hard coded now
-func RirekiAdd(db *sql.DB, rireki Rireki, month int) (*Rireki, error) {
-	tableName := strconv.Itoa(month) + "_rireki"
+func RirekiAdd(db *sql.DB, rireki Rireki, year int, month int) (*Rireki, error) {
+	tableName := strconv.Itoa(year) + "_" + strconv.Itoa(month) + "_rireki"
 
 	formatedStartTime := rireki.StartTime.Format("2006-01-02 15:04:05")
 	formatedEndTime := rireki.EndTime.Format("2006-01-02 15:04:05")
@@ -71,8 +71,8 @@ func RirekiAdd(db *sql.DB, rireki Rireki, month int) (*Rireki, error) {
 }
 
 //IsContradicted is a function to decide if given rireki's is contradicted
-func IsContradicted(db *sql.DB, rireki Rireki, month int) ([]*Rireki, error) {
-	tableName := strconv.Itoa(month) + "_rireki"
+func IsContradicted(db *sql.DB, rireki Rireki, year int, month int) ([]*Rireki, error) {
+	tableName := strconv.Itoa(year) + "_" + strconv.Itoa(month) + "_rireki"
 
 	formatedStartTime := rireki.StartTime.Format("2006-01-02 15:04:05")
 	formatedEndTime := rireki.EndTime.Format("2006-01-02 15:04:05")
@@ -101,8 +101,8 @@ func IsContradicted(db *sql.DB, rireki Rireki, month int) ([]*Rireki, error) {
 }
 
 //RirekiDelete is a function to delete rireki
-func RirekiDelete(db *sql.DB, month int, joid int, id int) error {
-	tableName := strconv.Itoa(month) + "_rireki"
+func RirekiDelete(db *sql.DB, year int, month int, joid int, id int) error {
+	tableName := strconv.Itoa(year) + "_" + strconv.Itoa(month) + "_rireki"
 
 	res, err := db.Exec(fmt.Sprintf("DELETE FROM `%s` WHERE (id = '%d' AND joid = '%d')", tableName, id, joid))
 
@@ -117,8 +117,8 @@ func RirekiDelete(db *sql.DB, month int, joid int, id int) error {
 }
 
 //RirekiUpdate is a function to update rireki
-func RirekiUpdate(db *sql.DB, month int, joid int, id int, rireki Rireki) error {
-	tableName := strconv.Itoa(month) + "_rireki"
+func RirekiUpdate(db *sql.DB, year int, month int, joid int, id int, rireki Rireki) error {
+	tableName := strconv.Itoa(year) + "_" + strconv.Itoa(month) + "_rireki"
 
 	formatedStartTime := rireki.StartTime.Format("2006-01-02 15:04:05")
 	formatedEndTime := rireki.EndTime.Format("2006-01-02 15:04:05")

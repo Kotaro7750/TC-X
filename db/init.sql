@@ -13,7 +13,7 @@ CREATE TABLE syubetsu(
 );
 
 -- this table is a test table. table create should be managed by api server
-CREATE TABLE `5_rireki`(
+CREATE TABLE `2019_5_rireki`(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     joid INT NOT NULL,
     syubetsu INT NOT NULL,
@@ -23,10 +23,10 @@ CREATE TABLE `5_rireki`(
 );
 
 -- this insert string is test data.
-INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(63,12,"ビラ",cast('2019-05-16 12:34:00' as DATETIME),cast('2019-05-16 12:56:00' as DATETIME));
-INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(63,12,"会議",cast('2019-05-17 13:34:00' as DATETIME),cast('2019-05-17 13:56:00' as DATETIME));
-INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(94,12,"ポスタースタンド",cast('2019-05-16 12:34:00' as DATETIME),cast('2019-05-16 12:56:00' as DATETIME));
-INSERT INTO `5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(94,12,"会議",cast('2019-05-17 12:34:00' as DATETIME),cast('2019-05-17 12:56:00' as DATETIME));
+INSERT INTO `2019_5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(63,12,"ビラ",cast('2019-05-16 12:34:00' as DATETIME),cast('2019-05-16 12:56:00' as DATETIME));
+INSERT INTO `2019_5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(63,12,"会議",cast('2019-05-17 13:34:00' as DATETIME),cast('2019-05-17 13:56:00' as DATETIME));
+INSERT INTO `2019_5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(94,12,"ポスタースタンド",cast('2019-05-16 12:34:00' as DATETIME),cast('2019-05-16 12:56:00' as DATETIME));
+INSERT INTO `2019_5_rireki` (joid,syubetsu,about,start_time,end_time) VALUES(94,12,"会議",cast('2019-05-17 12:34:00' as DATETIME),cast('2019-05-17 12:56:00' as DATETIME));
 
 
 INSERT INTO syubetsu (name,syubetsu,salary) VALUES("窓口",3,1000);

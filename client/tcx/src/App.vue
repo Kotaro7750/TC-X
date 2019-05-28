@@ -16,6 +16,9 @@
             </ul>
             <ul class="navbar-nav" v-else>
                 <li class="nav-link">{{personalInfo.joid}} {{personalInfo.name}}</li>
+                <li class="nav-link"> <router-link to="/rireki" class=nav-link>履歴ノート</router-link></li>
+                <li class="nav-link"><router-link to="/syubetsu" class=nav-link>業務種別管理</router-link></li>
+                <li class="nav-link"><router-link to="/note" class=nav-link>ノート管理</router-link></li>
                 <li class="nav-item active">
                   <router-link to="/" @click.native="signOut" class=nav-link>SignOut</router-link>
                 </li>

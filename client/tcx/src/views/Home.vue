@@ -4,7 +4,6 @@
     <HelloWorld msg="TC-X will change your life"/>
     <h2>{{ msg }}</h2>
     <router-link to="/rireki">Rireki</router-link>
-    <router-link to="/syubetsu">Syubetsu</router-link>
   </div>
 </template>
 
