@@ -7,7 +7,7 @@
     <p class="loader" v-if="isLoading">Loading</p>
     <ul v-else>
         <li v-for="note in noteList" v-bind:key="note">
-            {{ note }}
+            {{ note | Note}}
             <button @click="deleteNote(note)">削除</button>
         </li>
     </ul>
@@ -20,7 +20,15 @@ import {Component, Vue,Prop,Watch} from "vue-property-decorator";
 
 @Component({
     components: {
-    }
+    },
+    filters: {
+        Note:function(DBNote: string) {
+            let year = DBNote.split('_')[0];
+            let month = DBNote.split('_')[1];
+
+            return year + "年" + month + "月ノート";
+        }
+    },
 })
 
 export default class NoteList extends Vue{
@@ -37,7 +45,6 @@ export default class NoteList extends Vue{
     created () {
         this.getNoteList();
     }
-
 
     getNoteList():void{
         this.isListError = false;

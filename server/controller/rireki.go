@@ -19,6 +19,11 @@ type RirekiCtr struct {
 
 //PersonalAll is a function to list up all indivisual rireki of month
 func (r *RirekiCtr) PersonalAll(c *gin.Context) {
+	year, err := strconv.Atoi(c.Param("year"))
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "PersonalAll", err.Error())
+		return
+	}
 
 	month, err := strconv.Atoi(c.Param("month"))
 	if err != nil {
@@ -38,7 +43,7 @@ func (r *RirekiCtr) PersonalAll(c *gin.Context) {
 		return
 	}
 
-	rirekiList, err := model.PersonalRirekiAll(r.DB, joid, month)
+	rirekiList, err := model.PersonalRirekiAll(r.DB, joid, year, month)
 
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 11, "PersonalAll", err.Error())
@@ -62,6 +67,12 @@ func (r *RirekiCtr) PersonalAll(c *gin.Context) {
 
 //RirekiAdd is a function to add rireki of month
 func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
+	year, err := strconv.Atoi(c.Param("year"))
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiAdd", err.Error())
+		return
+	}
+
 	month, err := strconv.Atoi(c.Param("month"))
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiAdd", err.Error())
@@ -87,6 +98,11 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 		return
 	}
 
+	if year != int(rireki.StartTime.Year()) {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiAdd", "URLParam :year not equal with JSONParam")
+		return
+	}
+
 	if month != int(rireki.StartTime.Month()) {
 		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiAdd", "URLParam :month not equal with JSONParam")
 		return
@@ -97,7 +113,7 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 		return
 	}
 
-	contradictedList, err := model.IsContradicted(r.DB, rireki, month)
+	contradictedList, err := model.IsContradicted(r.DB, rireki, year, month)
 
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 11, "RirekiAdd", err.Error())
@@ -109,7 +125,7 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 		return
 	}
 
-	addedRireki, err := model.RirekiAdd(r.DB, rireki, month)
+	addedRireki, err := model.RirekiAdd(r.DB, rireki, year, month)
 
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 11, "RirekiAdd", err.Error())
@@ -125,6 +141,13 @@ func (r *RirekiCtr) RirekiAdd(c *gin.Context) {
 
 //RirekiDelete is a function to delete rireki with joid and id
 func (r *RirekiCtr) RirekiDelete(c *gin.Context) {
+	year, err := strconv.Atoi(c.Param("year"))
+
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiDelete", err.Error())
+		return
+	}
+
 	month, err := strconv.Atoi(c.Param("month"))
 
 	if err != nil {
@@ -152,7 +175,7 @@ func (r *RirekiCtr) RirekiDelete(c *gin.Context) {
 		return
 	}
 
-	err = model.RirekiDelete(r.DB, month, joid, id)
+	err = model.RirekiDelete(r.DB, year, month, joid, id)
 
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 11, "RirekiDelete", err.Error())
@@ -168,6 +191,13 @@ func (r *RirekiCtr) RirekiDelete(c *gin.Context) {
 
 //RirekiUpdate is a function to update rireki date
 func (r *RirekiCtr) RirekiUpdate(c *gin.Context) {
+	year, err := strconv.Atoi(c.Param("year"))
+
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "RirekiUpdate", err.Error())
+		return
+	}
+
 	month, err := strconv.Atoi(c.Param("month"))
 
 	if err != nil {
@@ -201,7 +231,7 @@ func (r *RirekiCtr) RirekiUpdate(c *gin.Context) {
 		return
 	}
 
-	contradictedList, err := model.IsContradicted(r.DB, rireki, month)
+	contradictedList, err := model.IsContradicted(r.DB, rireki, year, month)
 
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 11, "RirekiUpdate", err.Error())
@@ -215,7 +245,7 @@ func (r *RirekiCtr) RirekiUpdate(c *gin.Context) {
 		}
 	}
 
-	err = model.RirekiUpdate(r.DB, month, joid, id, rireki)
+	err = model.RirekiUpdate(r.DB, year, month, joid, id, rireki)
 
 	if err != nil {
 		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 11, "RirekiUpdate", err.Error())
