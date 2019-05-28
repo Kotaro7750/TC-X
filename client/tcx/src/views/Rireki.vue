@@ -1,20 +1,17 @@
 <template>
   <div class="rireki">
 
-    <select v-model="selectedYear">
-      <option v-for="year in years" v-bind:key="year"  v-bind:value="year">{{year}}年</option>
+    <select v-model="selected">
+      <option v-for="note in noteList" v-bind:key="note"  v-bind:value="note">{{note | Note}}</option>
     </select>
-    <select v-model="selectedMonth">
-      <option v-for="month in months" v-bind:key="month"  v-bind:value="month">{{month}}月</option>
-    </select>
-
-    <RirekiAdd v-bind:year="selectedYear" v-bind:month="selectedMonth" @on-add="onAdd"/>
-    <RirekiList v-bind:year="selectedYear" v-bind:month="selectedMonth" ref="list"/>
+    <RirekiAdd v-bind:year="Number(selected.split('_')[0])" v-bind:month="Number(selected.split('_')[1])" @on-add="onAdd"/>
+    <RirekiList v-bind:year="Number(selected.split('_')[0])" v-bind:month="Number(selected.split('_')[1])" ref="list"/>
   </div>
 </template>
 
 <script lang="ts">
 import {Component, Vue} from "vue-property-decorator";
+import moment from "moment-timezone"
 import RirekiAdd from '@/components/RirekiAdd.vue';
 import RirekiList from '@/components/RirekiList.vue';
 
@@ -22,6 +19,14 @@ import RirekiList from '@/components/RirekiList.vue';
   components: {
     RirekiAdd,
     RirekiList,
+  },
+  filters: {
+      Note:function(DBNote: string) {
+          let year = DBNote.split('_')[0];
+          let month = DBNote.split('_')[1];
+
+          return year + "年" + month + "月ノート";
+      }
   },
   beforeRouteEnter: function(to, from, next) {
     next(component => {
@@ -35,16 +40,28 @@ import RirekiList from '@/components/RirekiList.vue';
 })
 
 export default class Rireki extends Vue{
-  years:number[] = [2019];
-  months:number[] = [1,2,3,4,5,6,7,8,9,10,11,12];
+  selected = String(moment().year()) + "_" + String(moment().month()+1) + "_rireki";
 
-  selectedYear = 2019;
-  selectedMonth = 5;
+  noteList: string[] = [];
+
+  isListError:boolean = false;
+  listError:{} = {};
+
+  created(){
+    this.isListError = false;
+    this.$store.dispatch('getNoteList').then(() => {
+        this.noteList = this.$store.getters.getNoteList
+    }).catch((error) => {
+        this.listError = error;
+        this.isListError = true
+    });
+  }
 
   onAdd(){
     let rirekiList:any = this.$refs.list;
     rirekiList.getRirekiList();
   }
+
 }
 </script>
 
