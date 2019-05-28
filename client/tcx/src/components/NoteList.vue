@@ -8,7 +8,7 @@
     <ul v-else>
         <li v-for="note in noteList" v-bind:key="note">
             {{ note }}
-            <button @click="deleteNote(note.note)">削除</button>
+            <button @click="deleteNote(note)">削除</button>
         </li>
     </ul>
     <button @click="getNoteList">click</button>
@@ -51,11 +51,13 @@ export default class NoteList extends Vue{
         });
     }
 
-    deleteNote(id:number):void{
+    deleteNote(note:string):void{
         this.isDeleteError =false;
         let confirmDelete = confirm("消していいですか？");
         if (confirmDelete == true) {
-            let url = "http://localhost:8888/note/" + String(id);
+            let year = note.split('_')[0];
+            let month = note.split('_')[1];
+            let url = "http://localhost:8888/note/" + String(year) + "/" + String(month);
             fetch(url,{
                 method: 'DELETE',
                 headers: {'Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
