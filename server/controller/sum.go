@@ -2,8 +2,15 @@ package controller
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/csv"
+	"fmt"
+	"log"
 	"net/http"
+	"server/apiresponse"
+	"strconv"
+
+	"github.com/signintech/gopdf"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,25 +19,71 @@ import (
 joid,salary of each syubetsu,...,sum
 */
 
-func testOfCsv() *bytes.Buffer {
-	var sample = [][]string{
-		{"sample_1", "sample_2", "sample_3"}, {"sample_1", "sample_2", "sample_3"},
-	}
-
-	b := &bytes.Buffer{}
-	writer := csv.NewWriter(b) // utf8
-	for i := 0; i < 2; i++ {
-		writer.Write(sample[i])
-		writer.Flush()
-	}
-
-	return b
+//SumCtr is a controller for request to summarize
+type SumCtr struct {
+	DB *sql.DB
 }
 
-//test of returning csv
-func TestRetFile(c *gin.Context) {
-	b := testOfCsv()
+//SummarizeAll is a function to summarize rireki of month
+func (s *SumCtr) SummarizeAll(c *gin.Context) {
+	year, err := strconv.Atoi(c.Param("year"))
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "SummarizeAll", err.Error())
+		return
+	}
+
+	month, err := strconv.Atoi(c.Param("month"))
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusBadRequest, nil, 1, "SummarizeAll", err.Error())
+		return
+	}
+
+	filename := strconv.Itoa(year) + "_" + strconv.Itoa(month) + "_sum.csv"
+
+	buf := &bytes.Buffer{}
+	writer := csv.NewWriter(buf)
+
+	//get [][]string from model
+	var summarization = [][]string{{"sample_1", "sample_2", "sample_3"}, {"sample_1", "sample_2", "sample_3"}}
+
+	for _, personalSum := range summarization {
+		if err := writer.Write(personalSum); err != nil {
+			apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 12, "SummarizeAll", err.Error())
+			return
+		}
+	}
+	writer.Flush()
+
+	if err := writer.Error(); err != nil {
+		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 12, "SummarizeAll", err.Error())
+		return
+	}
+
 	c.Header("Content-Description", "File Transfer")
-	c.Header("Content-Disposition", "attachment; filename=/summarize/test.csv")
-	c.Data(http.StatusOK, "text/csv", b.Bytes())
+	c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
+	c.Data(http.StatusOK, "text/csv", buf.Bytes())
+}
+
+//SummarizeAllWithPdf is a function to summarize rireki of month and return with pdf
+func (s *SumCtr) SummarizeAllWithPdf(c *gin.Context) {
+	pdf := gopdf.GoPdf{}
+	pdf.Start(gopdf.Config{PageSize: *gopdf.PageSizeA4})
+	pdf.AddPage()
+	err := pdf.AddTTFFont("aozora", "/app/AozoraMinchoRegular.ttf")
+	if err != nil {
+		log.Print(err.Error())
+		return
+	}
+
+	err = pdf.SetFont("aozora", "", 14)
+	if err != nil {
+		log.Print(err.Error())
+		return
+	}
+	pdf.Cell(nil, "您好")
+
+	filename := "hoge.pdf"
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", filename))
+	c.Data(http.StatusOK, "application/pdf", pdf.GetBytesPdf())
 }

@@ -30,6 +30,7 @@ func main() {
 	syubetsuctr := &controller.SyubetsuCtr{DB: db}
 	rirekictr := &controller.RirekiCtr{DB: db}
 	notectr := &controller.NoteCtr{DB: db}
+	sumctr := &controller.SumCtr{DB: db}
 
 	router.Use(cors.New(config))
 
@@ -59,7 +60,7 @@ func main() {
 	router.POST("/note/:year/:month", notectr.NoteAdd)
 	router.DELETE("/note/:year/:month", notectr.NoteDelete)
 
-	router.GET("/sum", controller.TestRetFile)
+	router.GET("/sum/:year/:month", sumctr.SummarizeAll)
 
 	//404
 	router.NoRoute(func(c *gin.Context) {
