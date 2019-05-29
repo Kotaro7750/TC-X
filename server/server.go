@@ -59,6 +59,8 @@ func main() {
 	router.POST("/note/:year/:month", notectr.NoteAdd)
 	router.DELETE("/note/:year/:month", notectr.NoteDelete)
 
+	router.GET("/sum", controller.TestRetFile)
+
 	//404
 	router.NoRoute(func(c *gin.Context) {
 		apiresponse.APIResponse(c, http.StatusNotFound, nil, 1, "main", "No route fo this request")
