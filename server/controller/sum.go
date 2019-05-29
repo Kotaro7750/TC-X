@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"server/apiresponse"
+	"server/model"
 	"strconv"
 
 	"github.com/signintech/gopdf"
@@ -44,10 +45,14 @@ func (s *SumCtr) SummarizeAll(c *gin.Context) {
 	writer := csv.NewWriter(buf)
 
 	//get [][]string from model
-	var summarization = [][]string{{"sample_1", "sample_2", "sample_3"}, {"sample_1", "sample_2", "sample_3"}}
+	summarization, err := model.SummarizeAll(s.DB, year, month)
+	if err != nil {
+		apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 11, "SummarizeAll", err.Error())
+		return
+	}
 
-	for _, personalSum := range summarization {
-		if err := writer.Write(personalSum); err != nil {
+	for i := range summarization {
+		if err := writer.Write(summarization[i]); err != nil {
 			apiresponse.APIResponse(c, http.StatusInternalServerError, nil, 12, "SummarizeAll", err.Error())
 			return
 		}
