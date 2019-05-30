@@ -2,6 +2,7 @@ package model
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -28,32 +29,17 @@ func SummarizeAll(db *sql.DB, year int, month int) ([][]string, error) {
 		jSyubetsuMap[syubetsuList[i][0]] = i
 	}
 
-	moneySum := make([][]float64, len(userList))
-	for i := range moneySum {
-		moneySum[i] = make([]float64, len(syubetsuList)+1)
-	}
-
-	for i := 0; i < len(userList); i++ {
-		for j := 0; j < len(syubetsuList)+1; j++ {
-			moneySum[i][j] = 0
-		}
-	}
-	//select joid,syubetsu,startTime,endTime and row => [[joid,syubetsu,time],...[]]
-	rirekiList, err := RirekiListString(db, year, month)
-	if err != nil {
-		fmt.Print(err.Error())
+	if len(userList) == 0 && len(syubetsuList) == 0 {
+		err := errors.New("length of user or syubetsu is zero")
 		return nil, err
 	}
-	fmt.Print(rirekiList)
 
-	for n := range rirekiList {
-		i := iJoidMap[rirekiList[n][0]]
-		j := jSyubetsuMap[rirekiList[n][1]]
-		time, _ := strconv.Atoi(rirekiList[n][2])
-		hourSalary, _ := strconv.Atoi(syubetsuList[j][2])
-		moneySum[i][j] += float64(time) * float64(hourSalary) / 60
+	moneySum, err := moneySum(db, year, month, userList, iJoidMap, syubetsuList, jSyubetsuMap)
+	if err != nil {
+		return nil, err
 	}
 
+	//sum personal total
 	for i := 0; i < len(userList); i++ {
 		personalSum := 0.0
 		for j := 0; j < len(syubetsuList); j++ {
@@ -61,8 +47,8 @@ func SummarizeAll(db *sql.DB, year int, month int) ([][]string, error) {
 		}
 		moneySum[i][len(syubetsuList)] = personalSum
 	}
-	fmt.Print(moneySum)
 
+	//prepare table
 	summarize := make([][]string, len(userList)+1)
 	for i := range summarize {
 		summarize[i] = make([]string, len(syubetsuList)+3)
@@ -73,6 +59,8 @@ func SummarizeAll(db *sql.DB, year int, month int) ([][]string, error) {
 			summarize[i][j] = ""
 		}
 	}
+
+	//set row and column name
 	summarize[0][0] = "Joid"
 	summarize[0][1] = "名前"
 
@@ -81,6 +69,7 @@ func SummarizeAll(db *sql.DB, year int, month int) ([][]string, error) {
 	}
 	summarize[0][len(syubetsuList)+2] = "合計"
 
+	//put summarize from moneySum
 	for i := 1; i < len(userList)+1; i++ {
 		summarize[i][0] = userList[i-1][0]
 		summarize[i][1] = userList[i-1][1]
@@ -89,20 +78,47 @@ func SummarizeAll(db *sql.DB, year int, month int) ([][]string, error) {
 		}
 	}
 	fmt.Print(summarize)
-
-	/*
-		sum [][]string. sum(0,0) is "joid/syubetsu". sum(0,j) is syubetsu_map[j]. sum(i,0) is joid_map[i]. sum(i,j) is salary of joid_map[i] & syubetsu_map[j]
-		for line of row{
-			joid := line[0]
-			syubetsu := line[1]
-			startTime := line[2]
-			endTime := line[3]
-
-			time := endTime - startTime in minutes format
-			salary := time * syubetsu_salary_map[syubetsu]
-			sum[joid_map[joid]][syubetsu_map[syubetsu]] += salary
-		}
-	*/
-
 	return summarize, nil
+}
+
+func moneySum(db *sql.DB, year int, month int, userList [][2]string, iJoidMap map[string]int, syubetsuList [][3]string, jSyubetsuMap map[string]int) ([][]float64, error) {
+	//prepare summarization of money
+	moneySum := make([][]float64, len(userList))
+	for i := range moneySum {
+		moneySum[i] = make([]float64, len(syubetsuList)+1)
+	}
+
+	for i := 0; i < len(userList); i++ {
+		for j := 0; j < len(syubetsuList)+1; j++ {
+			moneySum[i][j] = 0
+		}
+	}
+
+	//get all rireki of year,month
+	rirekiList, err := RirekiListString(db, year, month)
+	if err != nil {
+		fmt.Print(err.Error())
+		return nil, err
+	}
+
+	//summarize rireki
+	for n := range rirekiList {
+		i := iJoidMap[rirekiList[n][0]]
+		j := jSyubetsuMap[rirekiList[n][1]]
+		time, _ := strconv.Atoi(rirekiList[n][2])
+		hourSalary, _ := strconv.Atoi(syubetsuList[j][2])
+		moneySum[i][j] += float64(time) * float64(hourSalary) / 60
+	}
+
+	//sum personal total
+	for i := 0; i < len(userList); i++ {
+		personalSum := 0.0
+		for j := 0; j < len(syubetsuList); j++ {
+			personalSum += moneySum[i][j]
+		}
+		moneySum[i][len(syubetsuList)] = personalSum
+	}
+
+	return moneySum, nil
+
 }

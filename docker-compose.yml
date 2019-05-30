@@ -11,6 +11,7 @@ services:
       - ./nginx/server.conf:/etc/nginx/nginx.conf
     environment: 
       TZ: "Asia/Tokyo"
+      VUE_APP_SERVER_URL: "http://localhost:8888"
 
   server:
     depends_on: 
@@ -22,6 +23,8 @@ services:
       - ./server:/app
     environment: 
       TZ: "Asia/Tokyo"
+      CLIENT_URL: "http://localhost:8080"
+      LISTEN_PORT: "8888"
 
   db:
     build:  ./db

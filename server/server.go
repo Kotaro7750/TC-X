@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"net/http"
+	"os"
 	"server/apiresponse"
 	"server/controller"
 
@@ -12,11 +13,13 @@ import (
 )
 
 func main() {
+	clientURL := os.Getenv("CLIENT_URL")
+	listenPort := os.Getenv("LISTEN_PORT")
 	router := gin.Default()
 
 	//CORS
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:8080"}
+	config.AllowOrigins = []string{clientURL}
 	config.AllowHeaders = []string{"*"}
 
 	//DB
@@ -68,5 +71,5 @@ func main() {
 		return
 	})
 
-	router.Run(":8888")
+	router.Run(":" + listenPort)
 }

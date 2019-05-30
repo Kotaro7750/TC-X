@@ -16,10 +16,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*
-joid,salary of each syubetsu,...,sum
-*/
-
 //SumCtr is a controller for request to summarize
 type SumCtr struct {
 	DB *sql.DB
