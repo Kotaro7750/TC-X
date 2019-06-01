@@ -75,7 +75,7 @@ export default class SyubetsuList extends Vue{
         this.isDeleteError =false;
         let confirmDelete = confirm("消していいですか？");
         if (confirmDelete == true) {
-            let url = "http://localhost:8888/syubetsu/" + String(id);
+            let url = process.env.VUE_APP_SERVER_URL+"/syubetsu/" + String(id);
             fetch(url,{
                 method: 'DELETE',
                 headers: {'Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
@@ -105,7 +105,7 @@ export default class SyubetsuList extends Vue{
         this.isEditError =false;
         let confirmEdit = confirm("更新していいですか？");
         if (confirmEdit == true) {
-            let url = "http://localhost:8888/syubetsu/" + String(this.editableID);
+            let url = process.env.VUE_APP_SERVER_URL+"/syubetsu/" + String(this.editableID);
             fetch(url,{
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},

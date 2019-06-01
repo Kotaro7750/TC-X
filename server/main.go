@@ -13,7 +13,8 @@ import (
 )
 
 func main() {
-	clientURL := os.Getenv("CLIENT_URL")
+	//clientURL := os.Getenv("CLIENT_URL")
+	clientURL := "http://localhost:8080"
 	listenPort := os.Getenv("LISTEN_PORT")
 	router := gin.Default()
 

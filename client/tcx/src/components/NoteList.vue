@@ -64,7 +64,7 @@ export default class NoteList extends Vue{
         if (confirmDelete == true) {
             let year = note.split('_')[0];
             let month = note.split('_')[1];
-            let url = "http://localhost:8888/note/" + String(year) + "/" + String(month);
+            let url = process.env.VUE_APP_SERVER_URL+"/note/" + String(year) + "/" + String(month);
             fetch(url,{
                 method: 'DELETE',
                 headers: {'Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},

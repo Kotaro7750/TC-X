@@ -103,7 +103,7 @@ export default class RirekiList extends Vue{
 
     getRirekiList():void{
         this.isListError = false;
-        let url = "http://localhost:8888/rireki/" + String(this.year) + "/"+ String(this.month) + "/" + String(this.personalInfo.joid);
+        let url = process.env.VUE_APP_SERVER_URL+"/rireki/" + String(this.year) + "/"+ String(this.month) + "/" + String(this.personalInfo.joid);
         fetch(url,{
             method: 'GET',
             headers: {'Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
@@ -126,7 +126,7 @@ export default class RirekiList extends Vue{
         this.isDeleteError =false;
         let confirmDelete = confirm("消していいですか？");
         if (confirmDelete == true) {
-            let url = "http://localhost:8888/rireki/" + String(this.year)+ "/"+ String(this.month) + "/" + String(this.personalInfo.joid) +"/" + String(id);
+            let url = process.env.VUE_APP_SERVER_URL+"/rireki/" + String(this.year)+ "/"+ String(this.month) + "/" + String(this.personalInfo.joid) +"/" + String(id);
             fetch(url,{
                 method: 'DELETE',
                 headers: {'Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},
@@ -156,7 +156,7 @@ export default class RirekiList extends Vue{
         this.isEditError =false;
         let confirmEdit = confirm("更新していいですか？");
         if (confirmEdit == true) {
-            let url = "http://localhost:8888/rireki/" + String(this.year)+ "/"+ String(this.month) + "/" + String(this.personalInfo.joid) + "/" + String(this.editableID);
+            let url = process.env.VUE_APP_SERVER_URL+"/rireki/" + String(this.year)+ "/"+ String(this.month) + "/" + String(this.personalInfo.joid) + "/" + String(this.editableID);
             fetch(url,{
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},

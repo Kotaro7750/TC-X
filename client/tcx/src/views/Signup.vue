@@ -33,7 +33,7 @@ export default class Signup extends Vue{
 
   SignUp(personalInfo:{joid:number,name:string,hashedPass:string}){
     this.isError = false;
-    var url = "http://localhost:8888/user";
+    var url = process.env.VUE_APP_SERVER_URL+"/user";
     fetch(url,{
       method: 'POST',
       headers: {'Content-Type': 'application/json'},

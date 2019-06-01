@@ -82,7 +82,7 @@ export const store = new Vuex.Store({
 
     getSyubetsuList(context) {
       return new Promise((resolve, reject) => {
-        const url = 'http://localhost:8888/syubetsu';
+        const url = process.env.VUE_APP_SERVER_URL + '/syubetsu';
         let syubetsuList: Array<{syubetsu: number, name: string, salary: number}> = [];
         fetch(url, {
             method: 'GET',
@@ -102,7 +102,7 @@ export const store = new Vuex.Store({
 
     getNoteList(context) {
       return new Promise((resolve, reject) => {
-        const url = 'http://localhost:8888/note';
+        const url = process.env.VUE_APP_SERVER_URL + '/note';
         let noteList: string[] = [];
         fetch(url, {
             method: 'GET',
