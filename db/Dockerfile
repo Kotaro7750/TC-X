@@ -13,5 +13,6 @@ RUN apt-get update && \
     echo "ja_JP.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen ja_JP.UTF-8
 ENV LC_ALL ja_JP.UTF-8
+ENV TZ="Asia/Tokyo"
 EXPOSE 3306
 CMD ["mysqld"]

@@ -4,13 +4,10 @@ services:
     depends_on: 
       - server
     build: 
-      context: ./nginx
-      dockerfile: Dockerfile_dev
+      context: ./client
+      dockerfile: Dockerfile
     ports:
       - '8080:80'
-    volumes:
-      - ./client/tcx/dist:/var/www/html
-      - ./nginx/server.conf:/etc/nginx/nginx.conf
     environment: 
       TZ: "Asia/Tokyo"
 
@@ -19,11 +16,9 @@ services:
       - db
     build: 
       context: ./server
-      dockerfile: Dockerfile_dev
+      dockerfile: Dockerfile
     ports:
       - '8888:8888'
-    volumes:
-      - ./server:/app
     environment: 
       TZ: "Asia/Tokyo"
       CLIENT_URL: "http://localhost:8080"
