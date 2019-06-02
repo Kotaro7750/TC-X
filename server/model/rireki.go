@@ -132,3 +132,33 @@ func RirekiUpdate(db *sql.DB, year int, month int, joid int, id int, rireki Rire
 
 	return nil
 }
+
+//RirekiListString is a function to return [[joid,syubetsu,time]...[]] from rireki
+func RirekiListString(db *sql.DB, year int, month int) ([][3]string, error) {
+	tableName := strconv.Itoa(year) + "_" + strconv.Itoa(month) + "_rireki"
+	rows, err := db.Query(fmt.Sprintf("SELECT joid,syubetsu,start_time,end_time FROM %s", tableName))
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var rirekiList [][3]string
+	for rows.Next() {
+		var rireki Rireki
+		if err := rows.Scan(&rireki.Joid, &rireki.Syubetsu, &rireki.StartTime, &rireki.EndTime); err != nil {
+			return nil, err
+		}
+		loc, _ := time.LoadLocation("Asia/Tokyo")
+		startTime, _ := time.ParseInLocation(`2006-01-02T15:04:05`, rireki.StartTime.Format("2006-01-02T15:04:05"), loc)
+		endTime, _ := time.ParseInLocation(`2006-01-02T15:04:05`, rireki.EndTime.Format("2006-01-02T15:04:05"), loc)
+
+		time := endTime.Sub(startTime).Minutes()
+		rirekiList = append(rirekiList, [3]string{strconv.Itoa(rireki.Joid), strconv.Itoa(rireki.Syubetsu), strconv.Itoa(int(time))})
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return rirekiList, nil
+}

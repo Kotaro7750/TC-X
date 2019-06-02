@@ -18,6 +18,7 @@ var errorCode = map[int]string{
 
 	//Internal Server Error
 	11: "FailedExecQuery", //query string is correct,but execing query failed in some reason
+	12: "FailedWriteCsv",  //failed to write to csv for some reasons
 }
 
 //Error is a function to make new APIError

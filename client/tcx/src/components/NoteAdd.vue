@@ -42,7 +42,7 @@ export default class NoteAdd extends Vue{
       this.isError = false;
       let confirmDelete = confirm("作成していいですか？");
       if (confirmDelete == true) {
-        var url = "http://localhost:8888/note/" + this.selectedYear + "/" + this.selectedMonth;
+        var url = process.env.VUE_APP_SERVER_URL+"/note/" + this.selectedYear + "/" + this.selectedMonth;
         fetch(url,{
           method: 'POST',
           headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},

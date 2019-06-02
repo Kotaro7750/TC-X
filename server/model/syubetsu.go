@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 )
 
 //Syubetsu is a structure of each syubetsu
@@ -80,4 +81,32 @@ func SyubetsuUpdate(db *sql.DB, syubetsu Syubetsu) error {
 	}
 
 	return nil
+}
+
+//SyubetsuListString is a funtction to return [[syubetsu,name,salary]...[]]
+func SyubetsuListString(db *sql.DB) ([][3]string, error) {
+	tableName := "syubetsu"
+	rows, err := db.Query(fmt.Sprintf("SELECT syubetsu,name,salary FROM %s", tableName))
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var syubetsuList [][3]string
+	for rows.Next() {
+		var syubetsu int
+		var name string
+		var salary int
+		if err := rows.Scan(&syubetsu, &name, &salary); err != nil {
+			return nil, err
+		}
+		syubetsuList = append(syubetsuList, [3]string{strconv.Itoa(syubetsu), name, strconv.Itoa(salary)})
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return syubetsuList, nil
+
 }

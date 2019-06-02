@@ -3,7 +3,9 @@ services:
   nginx:
     depends_on: 
       - server
-    build: ./nginx
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile_dev
     ports:
       - '8080:80'
     volumes:
@@ -15,16 +17,23 @@ services:
   server:
     depends_on: 
       - db
-    build: ./server
+    build: 
+      context: ./server
+      dockerfile: Dockerfile_dev
     ports:
       - '8888:8888'
     volumes:
       - ./server:/app
     environment: 
       TZ: "Asia/Tokyo"
+      CLIENT_URL: "http://localhost:8080"
+      LISTEN_PORT: "8888"
+      DB_URL: "root:root@([db]:3306)/TCX?parseTime=true"
 
   db:
-    build:  ./db
+    build:  
+      context: ./db
+      dockerfile: Dockerfile_dev
     ports: 
       - '3306:3306'
     environment: 

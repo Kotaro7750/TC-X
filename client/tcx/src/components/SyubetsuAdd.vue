@@ -38,7 +38,7 @@ export default class SyubetsuAdd extends Vue{
 
     addSyubetsu():void{
       this.isError = false;
-      var url = "http://localhost:8888/syubetsu";
+      var url =  process.env.VUE_APP_SERVER_URL+"/syubetsu";
       fetch(url,{
         method: 'POST',
         headers: {'Content-Type': 'application/json','Authorization': 'Bearer ' + this.$store.getters.userInfo.token,},

@@ -4,12 +4,13 @@
 !.gitignore
 !docker-compose.yml
 
-!nginx/Dockerfile
+!nginx/Dockerfile_dev
 !nginx/server.conf
 
 !db/*
 
 !server/Dockerfile
+!server/Dockerfile_dev
 !server/*
 !server/controller/*
 !server/model/*
@@ -17,6 +18,8 @@
 !server/apiresponse/*
 !server/auth/*
 
+!client/Dockerfile
+!client/product.conf
 !client/tcx/*
 !client/tcx/src/*
 !client/tcx/src/assets/*

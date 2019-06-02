@@ -11,6 +11,7 @@ import (
 	"math"
 	"math/big"
 	"math/rand"
+	"strconv"
 
 	"golang.org/x/crypto/scrypt"
 )
@@ -137,4 +138,30 @@ func AuthUser(db *sql.DB, joid int, hashedPass string) (*User, error) {
 		HashedPass: "deadbeaf",
 		Token:      user.Token,
 	}, nil
+}
+
+//UserListString is a function to return [[joid,name]...[]] from users
+func UserListString(db *sql.DB) ([][2]string, error) {
+	tableName := "users"
+	rows, err := db.Query(fmt.Sprintf("SELECT joid,name FROM %s", tableName))
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var userList [][2]string
+	for rows.Next() {
+		var joid int
+		var name string
+		if err := rows.Scan(&joid, &name); err != nil {
+			return nil, err
+		}
+		userList = append(userList, [2]string{strconv.Itoa(joid), name})
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return userList, nil
 }

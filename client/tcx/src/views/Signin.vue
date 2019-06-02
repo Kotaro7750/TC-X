@@ -36,7 +36,7 @@ export default class Signin extends Vue{
 
   SignIn(personalInfo:{joid:number,name:string,hashedPass:string}){
     this.isError = false;
-    let url = "http://localhost:8888/user/" + String(personalInfo.joid);
+    let url = process.env.VUE_APP_SERVER_URL+  "/user/" + String(personalInfo.joid);
     console.log(url);
     fetch(url,{
       method: 'GET',
