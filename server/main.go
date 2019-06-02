@@ -14,8 +14,9 @@ import (
 
 func main() {
 	//clientURL := os.Getenv("CLIENT_URL")
-	clientURL := "http://localhost:8080"
+	clientURL := os.Getenv("CLIENT_URL")
 	listenPort := os.Getenv("LISTEN_PORT")
+	dbURL := os.Getenv("DB_URL")
 	router := gin.Default()
 
 	//CORS
@@ -24,7 +25,8 @@ func main() {
 	config.AllowHeaders = []string{"*"}
 
 	//DB
-	db, err := sql.Open("mysql", "root:root@([db]:3306)/TCX?parseTime=true")
+	//db, err := sql.Open("mysql", "root:root@([db]:3306)/TCX?parseTime=true")
+	db, err := sql.Open("mysql", dbURL)
 	if err != nil {
 		panic(err.Error())
 	}

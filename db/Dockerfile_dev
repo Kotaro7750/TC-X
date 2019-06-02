@@ -1,11 +1,11 @@
-FROM mysql:5.7
+FROM mysql:latest
 ENV MYSQL_ROOT_PASSWORD="root"
 ENV MYSQL_USER="test"
 ENV MYSQL_PASSWORD="test"
 ENV MYSQL_DATABASE="TCX"
 
 COPY my.cnf /etc/mysql/conf.d/my.cnf
-COPY init.sql /init.sql
+COPY init.sql /docker-entrypoint-initdb.d/init.sql
 
 RUN apt-get update && \
     apt-get install -y locales && \
