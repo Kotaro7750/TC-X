@@ -1,7 +1,7 @@
 <template>
   <div class="signin">
     <Logo/>
-    <h2>Sign In</h2>
+    <h2>サインイン</h2>
     <div class="alert alert-danger" role="alert" v-show="isError">{{ signInError }}</div>
     <AuthInput @on-submit="SignIn" message="ログイン" />
     <p>まだ登録していない方はこちら

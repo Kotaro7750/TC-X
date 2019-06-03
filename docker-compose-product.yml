@@ -1,0 +1,39 @@
+version: '3'
+services:
+  nginx:
+    depends_on: 
+      - server
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    environment: 
+      TZ: "Asia/Tokyo"
+
+  server:
+    depends_on: 
+      - db
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - '8888:8888'
+    environment: 
+      TZ: "Asia/Tokyo"
+      CLIENT_URL: "http://34.85.83.147"
+      LISTEN_PORT: "8888"
+      DB_URL: "root:root@([db]:3306)/TCX?parseTime=true"
+
+  db:
+    build:  
+      context: ./db
+      dockerfile: Dockerfile_dev
+    ports: 
+      - '3306:3306'
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+      MYSQL_DATABASE: TCX
+      TZ: "Asia/Tokyo"

@@ -1,12 +1,30 @@
 <template>
-  <div class="authinput">
-    <ul v-show="isInputError">
-      <li v-for="inputError in inputErrors" v-bind:key="inputError">{{inputError}}</li>
-    </ul>
-    <input type="number"  v-model="personalInfo.joid">
-    <input type="text" maxlength="100" v-model="personalInfo.name">
-    <input type="password" maxlength="100" v-model="personalInfo.password">
-    <button v-show="!isInputError" @click="onSubmit">{{message}}</button>
+  <div class="container-fluid">
+    <div class="row" v-show="isInputError">
+      <b-alert show variant="warning" class="col-md-6 offset-md-3">
+        <ul v-show="isInputError">
+          <li v-for="inputError in inputErrors" v-bind:key="inputError">{{inputError}}</li>
+        </ul>
+      </b-alert>
+    </div>
+    <div class="row">
+      <b-input-group prepend="Joid" class="col-md-4 offset-md-4">
+        <b-form-input type="number" v-model="personalInfo.joid" size="20"></b-form-input>
+      </b-input-group>
+    </div>
+    <div class="row">
+      <b-input-group prepend="名前" class="col-md-4 offset-md-4">
+        <b-form-input type="text" maxlength="100" v-model="personalInfo.name"></b-form-input>
+      </b-input-group>
+    </div>
+    <div class="row">
+      <b-input-group prepend="パスワード" class="col-md-4 offset-md-4">
+        <b-form-input type="password" maxlength="100" v-model="personalInfo.password"></b-form-input>
+      </b-input-group>
+    </div>
+    <div class="row">
+      <b-button pill v-show="!isInputError" @click="onSubmit" class="col-md-2 offset-md-5">{{message}}</b-button>
+    </div>
   </div>
 </template>
 
@@ -64,5 +82,8 @@ export default class AuthInput extends Vue{
 
 // TODO: add css
 <style scoped>
+ul {
+  list-style: none
+}
 
 </style>

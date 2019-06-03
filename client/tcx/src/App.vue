@@ -1,30 +1,22 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark mt-3 mb-3">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav4" aria-controls="navbarNav4" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <router-link to="/" class="navbar-brand" >TC-X</router-link>
-        <div class="collapse navbar-collapse justify-content-end">
-            <ul class="navbar-nav" v-if="!isSignIn">
-                <li class="nav-item active">
-                  <router-link to="/signup" class=nav-link>SignUp</router-link>
-                </li>
-                <li class="nav-item active">
-                  <router-link to="/signin" class=nav-link>SignIn</router-link>
-                </li>
-            </ul>
-            <ul class="navbar-nav" v-else>
-                <li class="nav-link">{{personalInfo.joid}} {{personalInfo.name}}</li>
-                <li class="nav-link"> <router-link to="/rireki" class=nav-link>履歴ノート</router-link></li>
-                <li class="nav-link"><router-link to="/syubetsu" class=nav-link>業務種別管理</router-link></li>
-                <li class="nav-link"><router-link to="/note" class=nav-link>ノート管理</router-link></li>
-                <li class="nav-item active">
-                  <router-link to="/" @click.native="signOut" class=nav-link>SignOut</router-link>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <b-navbar toggleable="lg" type="dark" variant="info">
+        <b-navbar-brand to="/">TC-X</b-navbar-brand>
+        <b-navbar-toggle target="nav-collapse" right></b-navbar-toggle>
+
+        <b-collapse id="nav-collapse" is-nav >
+            <b-navbar-nav v-if="!isSignIn">
+                <b-nav-item to="/signup">登録</b-nav-item>
+                <b-nav-item to="/signin">サインイン</b-nav-item>
+            </b-navbar-nav>
+            <b-navbar-nav v-else>
+                <b-nav-item to="/rireki">履歴ノート</b-nav-item>
+                <b-nav-item to="/syubetsu">業務種別管理</b-nav-item>
+                <b-nav-item to="/note">ノート管理</b-nav-item>
+                <b-nav-item to="/" @click.native="signOut" >サインアウト</b-nav-item>
+            </b-navbar-nav>
+    </b-collapse>
+    </b-navbar>
     <router-view/>
   </div>
 </template>

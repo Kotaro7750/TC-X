@@ -3,6 +3,7 @@
 
 !.gitignore
 !docker-compose.yml
+!docker-compose-product.yml
 
 !nginx/Dockerfile_dev
 !nginx/server.conf

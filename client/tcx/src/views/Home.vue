@@ -1,22 +1,21 @@
 <template>
   <div class="home">
     <Logo/>
-    <HelloWorld msg="TC-X will change your life"/>
-    <h2>{{ msg }}</h2>
-    <router-link to="/rireki">Rireki</router-link>
+    <h1>TC-X will change your life</h1>
+    <div class="row">
+      <b-button pill variant="info" to="/rireki" class="col-md-2 offset-md-4 col-xs-2 offset-xs-4">履歴ノート</b-button>
+      <b-button pill variant="outline-secondary" to="/about" class="col-md-2 col-xs-2 ">About</b-button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component,Prop, Vue } from 'vue-property-decorator';
-import axios from 'axios';
 import Logo from '@/components/Logo.vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 
 @Component({
   components: {
     Logo,
-    HelloWorld,
   },
 })
 export default class Home extends Vue {

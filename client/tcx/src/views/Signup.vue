@@ -1,6 +1,6 @@
 <template>
   <div class="signup">
-    <h2>Sign up</h2>
+    <h2>登録</h2>
     <div class="alert alert-danger" role="alert" v-show="isError">{{ signUpError }}</div>
     <AuthInput @on-submit="onSubmit" message="登録"/>
   </div>
