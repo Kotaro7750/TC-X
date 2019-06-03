@@ -13,7 +13,7 @@
                 <b-nav-item to="/rireki">履歴ノート</b-nav-item>
                 <b-nav-item to="/syubetsu">業務種別管理</b-nav-item>
                 <b-nav-item to="/note">ノート管理</b-nav-item>
-                <b-nav-item to="/" @click.native="signOut" >サインアウト</b-nav-item>
+                <b-nav-item to="/" @click="signOut" >サインアウト</b-nav-item>
             </b-navbar-nav>
     </b-collapse>
     </b-navbar>
@@ -41,6 +41,7 @@ export default class App extends Vue{
   }
 
   signOut(){
+    console.log("signout!!")
     this.$router.push('/');
     this.$store.dispatch('signOut');
   }

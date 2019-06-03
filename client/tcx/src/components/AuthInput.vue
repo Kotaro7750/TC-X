@@ -23,7 +23,7 @@
       </b-input-group>
     </div>
     <div class="row">
-      <b-button pill v-show="!isInputError" @click="onSubmit" class="col-md-2 offset-md-5">{{message}}</b-button>
+      <b-button pill v-show="!isInputError" v-touch:tap="onSubmit" class="col-md-2 offset-md-5">{{message}}</b-button>
     </div>
   </div>
 </template>

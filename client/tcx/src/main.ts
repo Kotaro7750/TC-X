@@ -7,6 +7,9 @@ import jQuery from 'jquery';
 import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import 'vue-touch/dist/vue-touch.js'
+const VueTouch = require('vue-touch')
+Vue.use(VueTouch,{name: 'v-touch'});
 Vue.use(BootstrapVue);
 Vue.use(Vuex);
 
