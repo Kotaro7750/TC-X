@@ -98,8 +98,8 @@ export default class RirekiInput extends Vue{
 
     @Emit('on-submit')
     onSubmit(){
-      let start:moment.Moment = moment(String(this.year) + "-" + String(this.month) + "-" + String(this.rireki.startDay) + " " + this.rireki.startTime);
-      let end:moment.Moment = moment(String(this.year) + "-" + String(this.month) + "-" + String(this.rireki.startDay) + " " + this.rireki.endTime);
+      let start:moment.Moment = moment(String(this.year) + "-" + ("0" + String(this.month)).slice(-2) + "-" + ("0" + String(this.rireki.startDay)).slice(-2) + "T" + this.rireki.startTime);
+      let end:moment.Moment = moment(String(this.year) + "-" + ("0" + String(this.month)).slice(-2) + "-" + ("0" + String(this.rireki.startDay)).slice(-2) + "T" + this.rireki.endTime);
 
       if (end.isBefore(start)) {
         end = end.add(1,'d');

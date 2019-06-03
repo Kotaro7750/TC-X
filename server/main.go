@@ -22,7 +22,7 @@ func main() {
 	//CORS
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{clientURL}
-	config.AllowHeaders = []string{"*"}
+	config.AllowHeaders = []string{"Content-Type", "Authorization"}
 
 	//DB
 	//db, err := sql.Open("mysql", "root:root@([db]:3306)/TCX?parseTime=true")
