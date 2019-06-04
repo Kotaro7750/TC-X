@@ -6,6 +6,8 @@ services:
     build: 
       context: ./client
       dockerfile: Dockerfile
+      args: 
+        - PRODUCT_IP=34.85.83.147
     ports:
       - '80:80'
     environment: 

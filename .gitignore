@@ -5,9 +5,6 @@
 !docker-compose.yml
 !docker-compose-product.yml
 
-!nginx/Dockerfile_dev
-!nginx/server.conf
-
 !db/*
 
 !server/Dockerfile
@@ -20,6 +17,7 @@
 !server/auth/*
 
 !client/Dockerfile
+!client/Dockerfile_dev
 !client/product.conf
 !client/tcx/*
 !client/tcx/src/*

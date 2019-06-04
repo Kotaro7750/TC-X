@@ -1,10 +1,11 @@
-ARG timezome="Asia/Tokyo"
-
 FROM node:alpine AS build
+
+ARG timezome="Asia/Tokyo"
+ARG PRODUCT_IP
 WORKDIR /build
 ADD ./tcx /build
 ENV TZ=${timezome}
-RUN echo "VUE_APP_SERVER_URL=http://localhost:8888" > /build/.env.production
+RUN echo "VUE_APP_SERVER_URL=http://$PRODUCT_IP:8888" > /build/.env.production
 RUN npm install
 RUN npm run product
 
