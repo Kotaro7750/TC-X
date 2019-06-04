@@ -30,7 +30,8 @@ import RirekiList from '@/components/RirekiList.vue';
   },
   beforeRouteEnter: function(to, from, next) {
     next(component => {
-      if (component.$store.getters.isSignIn == false) {
+      //to debug, false => true
+      if (component.$store.getters.isSignIn == true) {
         next('/signin');
       }else{
         next();

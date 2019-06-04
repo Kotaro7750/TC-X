@@ -1,10 +1,14 @@
 <template>
-  <div class="input">
+  <div class="container-fluid">
     <h3 v-show="isInputTimeStrange">入力した時間を確認してください。このままだと終了時刻は翌日の時刻となります。</h3>
 
-    <ul v-show="!isInputCorrect">
-      <li v-for="errMsg in errMsgs" v-bind:key="errMsg">{{errMsg}}</li>
-    </ul>
+    <div class="row" v-show="!isInputCorrect">
+      <b-alert show variant="warning" class="col-md-6 offset-md-3">
+        <ul v-show="!isInputCorrect">
+          <li v-for="errMsg in errMsgs" v-bind:key="errMsg">{{errMsg}}</li>
+        </ul>
+      </b-alert>
+    </div>
     {{rireki.joid}}
     <p>
       <label for="syubetsu">業務種別</label>
