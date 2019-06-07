@@ -1,56 +1,77 @@
 <template>
   <div class="container-fluid">
     <h3 v-show="isInputTimeStrange">入力した時間を確認してください。このままだと終了時刻は翌日の時刻となります。</h3>
+    <span class="fa fa-search form-control-feedback"></span>
 
-    <div class="row" v-show="!isInputCorrect">
-      <b-alert show variant="warning" class="col-md-6 offset-md-3">
-        <ul v-show="!isInputCorrect">
-          <li v-for="errMsg in errMsgs" v-bind:key="errMsg">{{errMsg}}</li>
-        </ul>
-      </b-alert>
-    </div>
-    {{rireki.joid}}
-    <p>
-      <label for="syubetsu">業務種別</label>
-      <!-- <input type="number" id="syubetsu" v-model="rireki.syubetsu"> -->
-      <select id="syubetsu" v-model="rireki.syubetsu">
-        <option v-for="syubetsu in syubetsuList" v-bind:key="syubetsu.syubetsu"  v-bind:value="syubetsu.syubetsu">{{syubetsu.name}}</option>
-      </select>
-    </p>
+    <b-form class="needs-validation" novalidate>
+      <b-form inline class="offset-lg-4">
+        <b-form-select v-model="rireki.syubetsu" class="col-lg-2 col-3 rounded-pill theme-color">
+          <option v-for="syubetsu in syubetsuList" v-bind:key="syubetsu.syubetsu"  v-bind:value="syubetsu.syubetsu">{{syubetsu.name}}</option>
+        </b-form-select>
 
-    <p>
-      <label for="about">業務内容</label>
-      <input type="text" id="about" v-model="rireki.about">
-    </p>
+        <b-input-group  class="col-lg-5 col-9">
+          <b-form-input  name="about" v-model="rireki.about" class="rounded-pill" 
+              v-validate="{ required: true ,regex: /^[ぁ-んァ-ンーa-zA-Z0-9一-龠０-９\-\r]+$/}"
+              :state="validateState('about') && !isAboutBlank"
+              aria-describedby="about">
+          </b-form-input>
 
-    <p>
-      <label for="startday">日付</label>
-      <select id="startday" v-model="rireki.startDay">
-        <option v-for="day in days" v-bind:key="day"  v-bind:value="day">{{day}}日</option>
-      </select>
-    </p>
+          <b-form-invalid-feedback id="about">
+            {{$validator.errors.first('about')}}
+          </b-form-invalid-feedback>
+        </b-input-group>
+      </b-form>
 
-    <p>
-      <label for="start">開始時間</label>
-      <input type="time" id="start" v-model="rireki.startTime">
-    </p>
+      <p></p>
 
-    <p>
-      <label for="end">終了時間</label>
-      <input type="time" id="end" v-model="rireki.endTime">
-    </p>
-    <button @click="onSubmit" v-show="isInputCorrect">送信</button>
+      <b-form inline class="offset-lg-4">
+        <b-form-select v-model="rireki.startDay" class="col-lg-2 col-2 rounded-pill theme-color">
+          <option v-for="day in days" v-bind:key="day"  v-bind:value="day">{{day}}日</option>
+        </b-form-select>
+
+        <b-input-group  class="col-lg-5 col-10 form-group has-feedback feedback-icon ">
+          <b-form-input  name="start" v-model="rireki.startTime" type="time" class="time rounded-pill"
+              v-validate="{ required: true }" 
+              :state="!isInputTimeStrange"
+              aria-describedby="start">
+          </b-form-input>
+
+          <span class="input-group-text bg-white border-0">~</span>
+
+          <b-form-input  name="end" v-model="rireki.endTime" type="time" class="time rounded-pill"
+              v-validate="{ required: true }" 
+              :state="!isInputTimeStrange"
+              aria-describedby="end">
+          </b-form-input>
+
+          <b-form-invalid-feedback id="end">
+            <b-alert show variant="warning">Warning Alert</b-alert>
+          </b-form-invalid-feedback>
+
+        </b-input-group>
+      </b-form>
+
+
+
+
+    <span class ="glyphicon glyphicon-exclamation-sign"></span>
+    </b-form>
+    <p></p>
+    <b-button @click="onSubmit" v-show="isInputCorrect" pill variant="outline-success btn-lg">追加</b-button>
+
   </div>   
 </template>
 
 <script lang="ts">
-import {Component, Vue,Prop,Emit,Watch} from "vue-property-decorator";
+import {Component, Vue,Prop,Emit,Watch,Inject} from "vue-property-decorator";
 import moment from "moment-timezone"
+import VeeValidate ,{Validator}from 'vee-validate';
 
 @Component({
 })
 
 export default class RirekiInput extends Vue{
+    @Inject() $validator!:Validator;
     @Prop(Number) month!:number;
     @Prop(Number) year!:number;
     @Prop() initData!:{
@@ -100,8 +121,10 @@ export default class RirekiInput extends Vue{
 
     errMsgs: string[] = [];
 
+
     @Emit('on-submit')
     onSubmit(){
+      console.log(this.$validator)
       let start:moment.Moment = moment(String(this.year) + "-" + ("0" + String(this.month)).slice(-2) + "-" + ("0" + String(this.rireki.startDay)).slice(-2) + "T" + this.rireki.startTime);
       let end:moment.Moment = moment(String(this.year) + "-" + ("0" + String(this.month)).slice(-2) + "-" + ("0" + String(this.rireki.startDay)).slice(-2) + "T" + this.rireki.endTime);
 
@@ -121,6 +144,10 @@ export default class RirekiInput extends Vue{
 
     created(){
       this.getSyubetsuList();
+    }
+
+    validateState(ref:string) {
+      return !this.$validator.errors.has(ref);
     }
 
     //validate if input is correct
@@ -145,8 +172,18 @@ export default class RirekiInput extends Vue{
       }
     }
 
+    get isAboutBlank():boolean{
+      if (this.rireki.about == "") {
+        return true;
+      }
+      return false;
+    }
+
     //validate if input time is strange 
     get isInputTimeStrange():boolean{
+      if (this.rireki.startTime == "" || this.rireki.endTime == "") {
+        return true;
+      }
       let startTimeNum = moment(this.rireki.startTime,'HH:mm');
       let endTimeNum = moment(this.rireki.endTime,'HH:mm');
       if (endTimeNum <= startTimeNum) {
@@ -191,6 +228,24 @@ export default class RirekiInput extends Vue{
 
 <style scoped>
 /* add css */ 
+  .starttime-pill{
+    border-radius: 50pt 50pt
+  }
+
+  .endtime-pill{
+    border-radius: 50pt 50pt
+  }
+
+  .theme-color{
+    color: #FFFFFF;
+    background: #2D9F91;
+  }
+
+  .time.form-control.is-invalid{
+    border-color: #ffc107;
+    background-image: url();
+  }
+
 
 </style>
 

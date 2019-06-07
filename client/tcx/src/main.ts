@@ -7,10 +7,26 @@ import jQuery from 'jquery';
 import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-import Vue2TouchEvents from 'vue2-touch-events';
-Vue.use(Vue2TouchEvents);
+import VeeValidate, {Validator} from 'vee-validate';
+// @ts-ignore: implicitly has an 'any' type.
+import ja from 'vee-validate/dist/locale/ja';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+library.add(fas);
+
 Vue.use(BootstrapVue);
 Vue.use(Vuex);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+Validator.localize('ja', ja);
+Vue.use(VeeValidate, {
+  locale:  'ja',
+  inject: true,
+  fieldsBagName: 'veeFields',
+  errorBagName: 'veeErrors',
+});
 
 Vue.config.productionTip = false;
 

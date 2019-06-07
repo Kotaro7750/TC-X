@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
-    <b-navbar toggleable="lg" type="dark" variant="info">
-        <b-navbar-brand to="/">TC-X</b-navbar-brand>
+  <div id="app" >
+    <b-navbar toggleable="lg"  class="navbar-custom">
+        <b-navbar-brand to="/" class="navbar-light navbar-brand">TC-X</b-navbar-brand>
         <b-navbar-toggle target="nav-collapse" right></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav >
@@ -17,7 +17,7 @@
             </b-navbar-nav>
     </b-collapse>
     </b-navbar>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -64,5 +64,26 @@ export default class App extends Vue{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+/* change the background color */
+.navbar-custom {
+    background-color: #2d9F91;
+}
+/* change the brand and text color */
+.navbar-custom.navbar-light .navbar-brand, 
+.navbar-custom.navbar-light .navbar-brand:hover,
+.navbar-custom.navbar-light .navbar-brand:focus {
+    color: #FFFFFF;
+}
+/* change the link color */
+.navbar-custom .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.041);
+}
+/* change the color of active or hovered links */
+.navbar-custom .nav-item.active .nav-link,
+.navbar-custom .nav-item:focus .nav-link,
+.navbar-custom .nav-item:hover .nav-link {
+    color: #ffffff;
 }
 </style>
