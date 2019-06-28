@@ -63,7 +63,7 @@ export default class AuthInput extends Vue{
 
     get isInputError(){
         this.inputErrors = [];
-      if (this.personalInfo.joid == 0) {
+      if (this.personalInfo.joid < 0) {
         this.inputErrors.push("Joidを入力してください")
       }
       if (this.personalInfo.name == "") {

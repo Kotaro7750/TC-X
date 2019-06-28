@@ -13,7 +13,7 @@ CREATE TABLE syubetsu(
 );
 
 -- this table is a test table. table create should be managed by api server
-CREATE TABLE `2019_5_rireki`(
+CREATE TABLE `2019_7_rireki`(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     joid INT NOT NULL,
     syubetsu INT NOT NULL,
@@ -23,7 +23,5 @@ CREATE TABLE `2019_5_rireki`(
 );
 
 -- this insert string is test data.
-
-
 INSERT INTO syubetsu (name,syubetsu,salary) VALUES("窓口",3,1000);
 INSERT INTO syubetsu (name,syubetsu,salary) VALUES("広報局",12,1000);

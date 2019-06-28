@@ -43,7 +43,7 @@ func main() {
 	//routing start
 
 	//Authentication
-	router.POST("/auth", userctr.TestAuth)
+	//router.POST("/auth", userctr.TestAuth)
 
 	//User
 	router.GET("/user/:joid", userctr.AuthUser)

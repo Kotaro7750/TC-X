@@ -1,16 +1,18 @@
 <template>
   <div class="container-fluid">
-    <h3 v-show="isInputTimeStrange">入力した時間を確認してください。このままだと終了時刻は翌日の時刻となります。</h3>
-    <span class="fa fa-search form-control-feedback"></span>
+    <p></p>
 
     <b-form class="needs-validation" novalidate>
-      <b-form inline class="offset-lg-4">
-        <b-form-select v-model="rireki.syubetsu" class="col-lg-2 col-3 rounded-pill theme-color">
+      <!--<b-form inline class="offset-lg-4">-->
+      <b-form inline class="">
+        <b-form-select v-model="rireki.syubetsu" class="col-3 rounded-pill theme-color">
+        <!--<b-form-select v-model="rireki.syubetsu" class="col-lg-2 col-3 rounded-pill theme-color">-->
           <option v-for="syubetsu in syubetsuList" v-bind:key="syubetsu.syubetsu"  v-bind:value="syubetsu.syubetsu">{{syubetsu.name}}</option>
         </b-form-select>
 
-        <b-input-group  class="col-lg-5 col-9">
-          <b-form-input  name="about" v-model="rireki.about" class="rounded-pill" 
+        <!--<b-input-group  class="col-lg-5 col-9">-->
+        <b-input-group  class="col-9">
+          <b-form-input  name="about" v-model="rireki.about" class="rounded-pill text form-controll" 
               v-validate="{ required: true ,regex: /^[ぁ-んァ-ンーa-zA-Z0-9一-龠０-９\-\r]+$/}"
               :state="validateState('about') && !isAboutBlank"
               aria-describedby="about">
@@ -24,40 +26,28 @@
 
       <p></p>
 
-      <b-form inline class="offset-lg-4">
-        <b-form-select v-model="rireki.startDay" class="col-lg-2 col-2 rounded-pill theme-color">
+      <!--<b-form inline class="offset-lg-4">-->
+      <b-form inline class="">
+        <!--<b-form-select v-model="rireki.startDay" class="col-lg-2 col-2 rounded-pill theme-color">-->
+        <b-form-select v-model="rireki.startDay" class="col-3 rounded-pill theme-color">
           <option v-for="day in days" v-bind:key="day"  v-bind:value="day">{{day}}日</option>
         </b-form-select>
 
-        <b-input-group  class="col-lg-5 col-10 form-group has-feedback feedback-icon ">
-          <b-form-input  name="start" v-model="rireki.startTime" type="time" class="time rounded-pill"
-              v-validate="{ required: true }" 
-              :state="!isInputTimeStrange"
-              aria-describedby="start">
+        <!--<b-input-group  class="col-lg-5 col-10 form-group has-feedback feedback-icon ">-->
+        <b-input-group  class="col-9 form-group has-feedback feedback-icon ">
+          <b-form-input  name="start" v-model="rireki.startTime" type="time" class="col-12 time rounded-pill" v-bind:class="timeCSSClass">
           </b-form-input>
 
-          <span class="input-group-text bg-white border-0">~</span>
+          <span class="input-group-text transparent border-0">~</span>
 
-          <b-form-input  name="end" v-model="rireki.endTime" type="time" class="time rounded-pill"
-              v-validate="{ required: true }" 
-              :state="!isInputTimeStrange"
-              aria-describedby="end">
+          <b-form-input  name="end" v-model="rireki.endTime" type="time" class="col-12 time rounded-pill" v-bind:class="timeCSSClass">
           </b-form-input>
-
-          <b-form-invalid-feedback id="end">
-            <b-alert show variant="warning">Warning Alert</b-alert>
-          </b-form-invalid-feedback>
 
         </b-input-group>
       </b-form>
-
-
-
-
-    <span class ="glyphicon glyphicon-exclamation-sign"></span>
     </b-form>
     <p></p>
-    <b-button @click="onSubmit" v-show="isInputCorrect" pill variant="outline-success btn-lg">追加</b-button>
+    <b-button @click="onSubmit" v-show="isInputCorrect" pill variant="outline-success">追加</b-button>
 
   </div>   
 </template>
@@ -192,6 +182,33 @@ export default class RirekiInput extends Vue{
       return false;
     }
 
+    get isInputTimeBlank():boolean{
+      if (this.rireki.startTime == "" || this.rireki.endTime == "") {
+        return true;
+      }
+      return false;
+    }
+
+    get isInputTimeLeaped():boolean{
+      let startTimeNum = moment(this.rireki.startTime,'HH:mm');
+      let endTimeNum = moment(this.rireki.endTime,'HH:mm');
+      if (endTimeNum <= startTimeNum) {
+        return true;
+      }
+      return false;
+    }
+
+    get timeCSSClass(){
+      if (this.isInputTimeBlank) {
+        return {'time' :true,'form-control' : true ,'is-blank':true};
+      }
+
+      if (this.isInputTimeLeaped) {
+        return {'time' :true,'form-control' : true ,'is-invalid':true};
+      }
+      return {'time' :true,'form-control' : true ,'is-ok':true};
+    }
+
     //return array filled of day of month
     dayOfMonth(month:number){
       let days=  Array(moment(String(month),"MM").daysInMonth());
@@ -241,11 +258,76 @@ export default class RirekiInput extends Vue{
     background: #2D9F91;
   }
 
+  .form-inline{
+    align-items: unset;
+  }
+
+  .transparent{
+    background-color: unset;
+  }
+
+  .text.form-controll.is-valid{
+    border-color: #2D9F91;
+    background-image: url();
+    padding-right: calc(1.5em + 0.75rem);
+  }
+
+  .text.form-controll.is-valid:focus{
+    border-color: #2D9F91;
+    background-image: url();
+    padding-right: calc(1.5em + 0.75rem);
+    box-shadow:0 0 0 0.2rem rgba(45, 159, 145, 0.25);
+  }
+
+  .text.form-control.is-invalid{
+    border-color: #dc3545;
+    background-image: url();
+    padding-right: calc(1.5em + 0.75rem);
+  }
+  .text.form-control.is-invalid:focus{
+    border-color: #dc3545;
+    background-image: url();
+    padding-right: calc(1.5em + 0.75rem);
+    box-shadow:0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+  }
+
+  .time.form-control.is-ok{
+    border-color: #2D9F91;
+    background-image: url();
+    padding-right: calc(0.75rem);
+  }
+  .time.form-control.is-ok:focus{
+    border-color: #2D9F91;
+    background-image: url();
+    padding-right: calc(0.75rem);
+    box-shadow:0 0 0 0.2rem rgba(45, 159, 145, 0.25);
+  }
+
   .time.form-control.is-invalid{
     border-color: #ffc107;
     background-image: url();
+    padding-right: calc(0.75rem);
+  }
+  .time.form-control.is-invalid:focus{
+    border-color: #ffc107;
+    background-image: url();
+    padding-right: calc(0.75rem);
+    box-shadow:0 0 0 0.2rem rgba(255, 193, 7, 0.25);
   }
 
+  .time.form-control.is-blank{
+    border-color: #dc3545;
+    background-image: url();
+    padding-right: calc(0.75rem);
+  }
+  .time.form-control.is-blank:focus{
+    border-color: #dc3545;
+    background-image: url();
+    box-shadow:0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    padding-right: calc(0.75rem);
+  }
+
+  
 
 </style>
 

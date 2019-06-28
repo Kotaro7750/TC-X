@@ -59,7 +59,7 @@ func UserAdd(db *sql.DB, user User) (*User, error) {
 		return nil, err
 	}
 	salt := base64.StdEncoding.EncodeToString(randomByte)
-	converted, _ := scrypt.Key([]byte("dkjfkd"), []byte(salt), 16384, 8, 1, 16)
+	converted, _ := scrypt.Key([]byte(user.Name), []byte(salt), 16384, 8, 1, 16)
 	token := hex.EncodeToString(converted[:])
 
 	_, err = db.Query(fmt.Sprintf("INSERT users (joid,name,pass,token) VALUES (%d,'%s','%s','%s')", user.Joid, user.Name, user.HashedPass, token))

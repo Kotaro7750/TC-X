@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"server/apiresponse"
-	"server/auth"
 	"server/model"
 )
 
@@ -115,16 +114,4 @@ func (u *UserCtr) AuthUser(c *gin.Context) {
 		"error":  nil,
 	})
 	return
-}
-
-func (u *UserCtr) TestAuth(c *gin.Context) {
-	ca := &auth.CertCtr{DB: u.DB}
-	authOk := ca.AuthWithToken(c, 63)
-
-	c.JSON(http.StatusOK, gin.H{
-		"result": authOk,
-		"error":  nil,
-	})
-	return
-
 }

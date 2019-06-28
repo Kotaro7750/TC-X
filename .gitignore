@@ -5,7 +5,10 @@
 !docker-compose.yml
 !docker-compose-product.yml
 
-!db/*
+!db/Dockerfile
+!db/init.sql
+!db/makeSu.py
+!db/my.cnf
 
 !server/Dockerfile
 !server/Dockerfile_dev

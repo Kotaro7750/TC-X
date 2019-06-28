@@ -64,6 +64,14 @@ export const store = new Vuex.Store({
       }
     },
 
+    isSuperUser: (state) => {
+      if (state.userInfo.signInJoid === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
     getSyubetsuList: (state) => {
       return state.syubetsuList;
     },

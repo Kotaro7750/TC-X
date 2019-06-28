@@ -1,11 +1,14 @@
 <template>
   <div class="rireki">
-
-    <select v-model="selected">
-      <option v-for="note in noteList" v-bind:key="note"  v-bind:value="note">{{note | Note}}</option>
-    </select>
-    <RirekiAdd v-bind:year="Number(selected.split('_')[0])" v-bind:month="Number(selected.split('_')[1])" @on-add="onAdd"/>
-    <RirekiList v-bind:year="Number(selected.split('_')[0])" v-bind:month="Number(selected.split('_')[1])" ref="list"/>
+    <div class="container-fluid offset-lg-2 col-lg-8">
+      <b-form inline class="col-lg-12">
+        <b-form-select v-model="selected" class="col-lg-3 col-6 rounded-pill">
+          <option v-for="note in noteList" v-bind:key="note"  v-bind:value="note">{{note | Note}}</option>
+        </b-form-select>
+      </b-form>
+    </div>
+    <RirekiAdd class="mt-5 offset-lg-2 col-lg-8" v-bind:year="Number(selected.split('_')[0])" v-bind:month="Number(selected.split('_')[1])" @on-add="onAdd"/>
+    <RirekiList class="mt-5 offset-lg-2 col-lg-8" v-bind:year="Number(selected.split('_')[0])" v-bind:month="Number(selected.split('_')[1])" ref="list"/>
   </div>
 </template>
 
@@ -31,7 +34,7 @@ import RirekiList from '@/components/RirekiList.vue';
   beforeRouteEnter: function(to, from, next) {
     next(component => {
       //to debug, false => true
-      if (component.$store.getters.isSignIn == true) {
+      if (component.$store.getters.isSignIn == false || component.$store.getters.isSuperUser == true) {
         next('/signin');
       }else{
         next();

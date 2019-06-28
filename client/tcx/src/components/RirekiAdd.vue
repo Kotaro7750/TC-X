@@ -1,6 +1,6 @@
 <template>
   <div class="rirekiadd">
-    <h2>履歴追加</h2>
+    <h2 class="left col-lg-3 ">履歴追加</h2>
     <p class="fetchError" v-show="isError">{{ fetchError }}</p>
     <RirekiInput @on-submit="onSubmit" v-bind:year="year" v-bind:month="month" ref="input"/>
   </div>
@@ -80,5 +80,9 @@ export default class RirekiAdd extends Vue{
 .fetchError { 
   padding:12px; font-weight:850; color:#262626; background:#FFEBE8; border:2px solid #990000; 
   }
+
+.left{
+  text-align: left;
+}
 </style>
 
